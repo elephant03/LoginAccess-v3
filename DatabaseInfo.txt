@@ -1,0 +1,4 @@
+When creating the database any users that shouldn't be able to get warnings
+(e.g. "owner" account or "admin" account)
+The warnings column value should be set to null
+Always do values for account typesin lower case
