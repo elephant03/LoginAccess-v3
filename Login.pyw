@@ -107,7 +107,7 @@ class Main():
                 #for everyone resets the background colour
                 associated_widget.config(bg = self.Background)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_Foreground(self, Frame):
@@ -116,7 +116,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.Foreground)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_Btn_Background(self, Frame):
@@ -125,7 +125,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.Btn_Background)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_Btn_Active(self, Frame):
@@ -134,7 +134,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.Btn_Active)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_QuitBtn_Background(self, Frame):
@@ -143,7 +143,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.QuitBtn_Background)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_QuitBtn_Active(self, Frame):
@@ -152,7 +152,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.QuitBtn_Active)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_PositiveBtn_Background(self, Frame):
@@ -161,7 +161,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.PositiveBtn_Background)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_PositiveBtn_Active(self, Frame):
@@ -170,7 +170,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.PositiveBtn_Active)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_Font(self, Frame):
@@ -179,7 +179,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.Font)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
 
     def UpdateState_TitleFont(self, Frame):
@@ -188,7 +188,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.TitleFont)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
     
     def UpdateState_SubTitleFont(self, Frame):
@@ -197,7 +197,7 @@ class Main():
             for associated_widget in Frame.winfo_children():
                 associated_widget.config(bg = self.SubTitleFont)
             return
-        except Exception as Identifier:
+        except Exception:
             pass
     #Finally they are over
 
@@ -229,7 +229,7 @@ class Main():
             try:
                 self.Cur.execute("SELECT Warnings FROM Users WHERE Username = ?", ((self.Username, )))
                 self.Warnings = self.Cur.fetchall()[0][0]
-            except Exception as Identifier:
+            except Exception:
                 pass
         
         try:
@@ -267,7 +267,7 @@ class Main():
                 self.Cur.execute("SELECT AccountType FROM Users WHERE Username = ?", ((self.Username,)))
 
                 self.AccountType = self.Cur.fetchall()[0][0]
-            except Exception as Identifier:
+            except Exception:
                 pass
         
         if self.AccountType == "admin" or self.AccountType == "owner":
@@ -376,12 +376,12 @@ class Main():
                 for i in range(len(self.Columns)):#Adds the kwargs to the table
                     self.Cur.execute("ALTER TABLE Bugs ADD COLUMN {ColumnName} TEXT".format(ColumnName = str(self.Columns[i]), ))
                 pass
-            except Exception  as Identifier:#If the databse or table already exist it will exit
+            except Exception:#If the databse or table already exist it will exit
                 pass
         
             try:
                 self.Cur.execute("INSERT INTO Bugs(Username, BugDetails) VALUES(?, ?)", (self.Username, self.Bug))
-            except Exception as Identifier:
+            except Exception:
                 pass
         
         self.Back(self.BugReport_fr, 2)
@@ -524,7 +524,7 @@ class Main():
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("DELETE FROM Users WHERE Username = ?", (self.Username,))
-            except Exception as Identifier:
+            except Exception:
                 pass
 
         
@@ -584,7 +584,7 @@ class Main():
                         else:
                             pass
                 self.Cur.execute("UPDATE Users SET Username = ? WHERE Username = ?", (self.NewUsername, self.Username))
-            except Exception as Identifier:
+            except Exception:
                 pass
 
         self.Back(self.ChangeUsername_fr, 1)
@@ -668,7 +668,7 @@ class Main():
                     self.RepeatChangePassword_ent.delete(0, "end")
                     return
 
-            except Exception as Identifier:
+            except Exception:
                 pass
 
         self.Back(self.ChangePassword_fr, 1)
@@ -715,7 +715,7 @@ class Main():
             
             try:
                 self.Cur.execute("UPDATE Users SET Email = ? WHERE Username = ?", (self.NewEmail, self.Username))
-            except Exception as Identifier:
+            except Exception:
                 pass
 
         self.Back(self.AddEmail_fr, 1)
@@ -767,7 +767,7 @@ class Main():
 
         self.Tools_File = __file__
         self.Tools_File = self.Tools_File[:-9]
-        self.Tools_File += "\Moduals\Tools\*.pyw"
+        self.Tools_File += r"\Moduals\Tools\*.pyw"
         self.Tools_File.replace("\\", "\\\\")
 
         self.Files = glob.glob(self.Tools_File)
@@ -820,7 +820,7 @@ class Main():
 
         self.Games_File = __file__
         self.Games_File = self.Games_File[:-9]
-        self.Games_File += "\Moduals\Games\*.pyw"
+        self.Games_File += r"\Moduals\Games\*.pyw"
         self.Games_File.replace("\\", "\\\\")
 
         self.Files = glob.glob(self.Games_File)
@@ -877,7 +877,7 @@ class Main():
                 for i in self.Cur:
                     for n in i:
                         self.Message_list = n.split(",")
-            except Exception as Identifier:
+            except Exception:
                 self.Message_list = ["You have no messages!"]
         
         for i in self.Message_list:
@@ -1060,7 +1060,7 @@ class Main():
                 self.Cur.execute("SELECT * FROM Bugs")
                 for i in self.Cur:
                         self.BugReports.append(i)
-            except Exception as Identifier:
+            except Exception:
                 self.BugReports.append(("","","No bugs reported"))
                 pass
         if not self.BugReports:
@@ -1471,7 +1471,7 @@ class Main():
                 self.Cur.execute("SELECT Password FROM Users WHERE UserName = ?", ((self.Username,)))
 
                 self.UserPassword = self.Cur.fetchall()[0][0]
-            except Exception as Identifier:
+            except Exception:
                 self.Space_lbl.config(text = "Username/Password is incorrect")
                 self.Username_ent.delete(0, "end")
                 self.Password_ent.delete(0, "end")
@@ -1563,7 +1563,7 @@ class Main():
                             return
                         else:
                             pass
-            except Exception as Identifier:
+            except Exception:
                 return
 
         #Connects to the database
@@ -1572,7 +1572,7 @@ class Main():
             self.Cur = self.Con.cursor()#Creates the curser object
             try:
                 self.Cur.execute("INSERT INTO USERS(Username, Password, AccountType, Warnings) VALUES(?, ?, ?, ?)", (self.Username, self.Password,self.AccountType, self.Warnings))
-            except Exception as Identifier:
+            except Exception:
                 pass
         self.NewAccount_fr.destroy()
 
@@ -1667,7 +1667,7 @@ class Main():
                 for i in range(len(self.Title)):#Adds the kwargs to the table
                     self.Cur.execute("ALTER TABLE Users ADD COLUMN {ColumnName} TEXT".format(ColumnName = str(self.Title[i]), ))
                 pass
-            except Exception  as Identifier:#If the databse or table already exist it will exit
+            except Exception:#If the databse or table already exist it will exit
                 pass
         
         #Sets the main frame- this will achally control the screen instead of the root
