@@ -223,9 +223,12 @@ class Main():
         self.Space_lbl = TK.Label(self.MainMenu_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl.grid(row = 1, column = 0, columnspan = 3, sticky = "nsew", padx = 2, pady = 2)
 
-        
+        #Connects to my database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
+
+            #Since I am bad at writting these in a try statment for debugging
             try:
                 self.Cur.execute("SELECT Warnings FROM Users WHERE Username = ?", ((self.Username, )))
                 self.Warnings = self.Cur.fetchall()[0][0]
@@ -248,6 +251,7 @@ class Main():
                 return
         
         except TypeError:
+            #A type error could be raised due to the value of it being null in admin and owner accounts
             pass
 
         self.Tools_btn = TK.Button(self.MainMenu_fr, bg = self.Btn_Background, foreground = self.Foreground, activebackground = self.Btn_Active, font = self.Font, text = "Tools", command = lambda: self.ToolsMenu())
@@ -260,8 +264,9 @@ class Main():
         self.Message_btn.grid(row = 4, column = 0, columnspan = 3, padx = 2, pady = 2, sticky = "nsew")
 
         
-
+        #Connects to the main database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT AccountType FROM Users WHERE Username = ?", ((self.Username,)))
@@ -269,6 +274,8 @@ class Main():
                 self.AccountType = self.Cur.fetchall()[0][0]
             except Exception:
                 pass
+
+        #Allows for different levels of authentication between users
         
         if self.AccountType == "admin" or self.AccountType == "owner":
             self.AdminMenu_btn = TK.Button(self.MainMenu_fr, bg = self.Btn_Background, activebackground = self.Btn_Active, font = self.Font, foreground = self.Foreground, text = "Admin Menu", command = lambda: self.AdminMenu())
@@ -288,7 +295,9 @@ class Main():
 
         self.Align_Grid(self.MainMenu_fr)
 
-    #Displays access to all of the different personal settings
+    '''
+    Displays access to all of the different personal settings
+    '''
     def Settings(self):
         self.MainMenu_fr.destroy()
         
@@ -325,6 +334,7 @@ class Main():
     All of the setting sub menus
     '''
     
+    #Allows a user to report any bugs they find
     def BugReport(self):
         self.Settings_fr.destroy()
         self.BugReport_fr = TK.Frame(self.Main_fr, bg = self.Background)
@@ -355,6 +365,7 @@ class Main():
 
         self.Align_Grid(self.BugReport_fr)
 
+    #Will place the bug report into the database
     def ReportBug(self):
         self.Bug = str(self.Bug_ent.get())
 
@@ -363,9 +374,12 @@ class Main():
             return
 
         
-
+        #Connects to my main database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
+
+            #Attempt to make a bugs table in the database
             try:
                 self.Columns = [
                     "Username",
@@ -378,7 +392,8 @@ class Main():
                 pass
             except Exception:#If the databse or table already exist it will exit
                 pass
-        
+
+            #Adds the bug into the bugs table
             try:
                 self.Cur.execute("INSERT INTO Bugs(Username, BugDetails) VALUES(?, ?)", (self.Username, self.Bug))
             except Exception:
@@ -386,7 +401,10 @@ class Main():
         
         self.Back(self.BugReport_fr, 2)
 
-
+    #Allows for a customied look of the program for the users current sesson
+    #IMPROVMENT
+    #DOESN'T EXSTEND INTO SUB-AREAS E.G. GAMES ETC. (yet...)
+    #FORGOTEN IF THE USER LOGS OUT (at the moment)
     def Customisation(self):
         
         self.Settings_fr.destroy()
