@@ -2,10 +2,14 @@
 This file creats the main login system
 '''
 
+'''
+Importing the needed moduals
+'''
 #imports the tkinter libary for the GUI
 import tkinter as TK
 #Imports the SQL libary for handeling the database
 import sqlite3 as lite
+
 #Imports my hashing system
 #Wirten out weird as the normal way wouldn't work with the subdictionaries so this way instead
 import os
@@ -21,6 +25,7 @@ try:
     Hash = __import__(module_name)
 finally:
     sys.path[:] = path # restore
+
 #Imports email server for password resets
 filename = "Moduals/Utilities/Email.py"
 
@@ -36,6 +41,9 @@ finally:
 
 
 class Main():
+    '''
+    The main login class containing all needed methods for the longin system
+    '''
     #Sets the defult colours and fonts so that each user can constomise it without effecting other users
     Defults = {
         "Background": "#7eccf7",
@@ -65,6 +73,7 @@ class Main():
         self.TitleFont = self.Defults["TitleFont"]
         self.SubTitleFont = self.Defults["SubTitleFont"]
 
+        #Updates all currently loard widgets to the new defaults
         self.UpdateState_Background(self.Main_fr)
         self.UpdateState_Btn_Active(self.Main_fr)
         self.UpdateState_Btn_Background(self.Main_fr)
@@ -77,6 +86,8 @@ class Main():
         self.UpdateState_SubTitleFont(self.Main_fr)
         self.UpdateState_TitleFont(self.Main_fr)
 
+
+        #If it has been changed (updated) by the user it will go back to the customisation frame
         if Update:
             self.Back(self.Customisation_fr, 2)
 
@@ -190,7 +201,9 @@ class Main():
             pass
     #Finally they are over
 
-    #The main menu display for when the user has successfuly loged in
+    '''
+    Loads the main menu screen for when the user has successfuly loged in
+    '''
     def MainMenu(self):
         self.Login_fr.destroy()
 
@@ -210,8 +223,8 @@ class Main():
         self.Space_lbl = TK.Label(self.MainMenu_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl.grid(row = 1, column = 0, columnspan = 3, sticky = "nsew", padx = 2, pady = 2)
 
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Warnings FROM Users WHERE Username = ?", ((self.Username, )))
@@ -246,9 +259,9 @@ class Main():
         self.Message_btn = TK.Button(self.MainMenu_fr, bg = self.Btn_Background, foreground = self.Foreground, activebackground = self.Btn_Active, font = self.Font, text = "View Messages", command = lambda: self.Messages())
         self.Message_btn.grid(row = 4, column = 0, columnspan = 3, padx = 2, pady = 2, sticky = "nsew")
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT AccountType FROM Users WHERE Username = ?", ((self.Username,)))
@@ -349,9 +362,9 @@ class Main():
             self.Space_lbl.config(text = "Sorry- you didn't leave any details about the bug")
             return
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Columns = [
@@ -506,8 +519,8 @@ class Main():
         self.Align_Grid(self.Account_fr)
     
     def DeleteAccount(self, Frame):
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("DELETE FROM Users WHERE Username = ?", (self.Username,))
@@ -552,9 +565,9 @@ class Main():
     def SaveChanges_Username(self):
         self.NewUsername = Hash.Hash(str(self.ChangeUsername_ent.get()))
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             
             try:
@@ -635,9 +648,9 @@ class Main():
             return
 
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             
             try:
@@ -695,9 +708,9 @@ class Main():
     def SaveChanges_Email(self):
         self.NewEmail = Hash.Hash(str(self.AddEmail_ent.get()))
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             
             try:
@@ -855,9 +868,9 @@ class Main():
         self.Space_lbl = TK.Label(self.Messages_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl.grid(row = 1, column = 0, sticky = "nsew", padx = 2, pady = 2, columnspan = 3)
         
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Messages FROM Users WHERE Username = ?", (self.Username,))
@@ -908,8 +921,8 @@ class Main():
 
     def DeleteMessage(self, Num):
         self.Message_list.pop(Num)
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Message_list = ",".join(self.Message_list)
@@ -974,8 +987,8 @@ class Main():
         self.TargetUser = Hash.Hash(str(self.SendTo_ent.get()))
         self.Message = str(self.Message_txt.get("1.0", "end"))
 
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Messages FROM Users WHERE Username = ?", (self.TargetUser,))
@@ -1039,8 +1052,8 @@ class Main():
         self.Space_lbl = TK.Label(self.ViewBugs_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl.grid(row = 1, column = 0, padx = 2, pady = 2, sticky = "nsew")
 
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.BugReports = []
             self.Cur = self.Con.cursor()
             try:
@@ -1100,9 +1113,9 @@ class Main():
 		
 
     def UpdateStatus(self, Status):
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("UPDATE Bugs SET Status = ? WHERE ID = ?", (str(Status), self.BugReports[self.BugNumber][0]))
@@ -1113,9 +1126,9 @@ class Main():
         self.Back(self.BugDetails_fr, 5)
 
     def DeleteBugReport(self):
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("DELETE FROM Bugs WHERE ID = ?", (self.BugReports[self.BugNumber][0],))
@@ -1160,8 +1173,8 @@ class Main():
     def WarnUser(self):
         self.WarnedUsername = Hash.Hash(str(self.WarnedUser_ent.get()))
 
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Warnings FROM Users WHERE UserName = ?", (self.WarnedUsername,))
@@ -1232,8 +1245,8 @@ class Main():
         self.Align_Grid(self.DeleteUserAccount_fr)
     
     def DeleteUserAccountAction(self):
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("DELETE FROM Users WHERE Username = ?", (Hash.Hash(str(self.TargetUser_ent.get())),))
@@ -1286,8 +1299,8 @@ class Main():
         self.NewAccountType = self.StrVar.get()
         self.TargetUsername = Hash.Hash(str(self.TargetUsername_ent.get()))
 
-        self.Con = lite.connect("myDatabase.db")
-        with self.Con:
+        
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("UPDATE Users SET AccountType = ? WHERE Username = ?", (self.NewAccountType.lower(), self.TargetUsername))
@@ -1404,9 +1417,9 @@ class Main():
             self.Email_ent.delete(0, 'end')
             return
 
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Email FROM Users WHERE Username = ?", ((self.Username,)))
@@ -1424,9 +1437,9 @@ class Main():
             self.RandomNum = randint(10000, 100000)
             Email.Email(str(self.Email_ent.get()), NewPassword = self.RandomNum)
 
-            self.Con = lite.connect("myDatabase.db")
+            
 
-            with self.Con:
+            with lite.connect("myDatabase.db") as self.Con:
                 self.Cur = self.Con.cursor()
                 try:
                     self.Cur.execute("UPDATE Users SET Password = ? WHERE Username = ?", (Hash.Hash(self.RandomNum), self.Username))
@@ -1448,11 +1461,11 @@ class Main():
         root.destroy()
 
     def Login(self):
-        self.Con = lite.connect("myDatabase.db")
+        
         self.Username = Hash.Hash(str(self.Username_ent.get()))
         self.Password = Hash.Hash(str(self.Password_ent.get()))
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("SELECT Password FROM Users WHERE UserName = ?", ((self.Username,)))
@@ -1531,9 +1544,9 @@ class Main():
             self.Username_ent.focus()
             return
         
-        self.Con = lite.connect("myDatabase.db")
+        
 
-        with self.Con:
+        with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
             try:
                 #Tests if the username already exists in the database
@@ -1553,9 +1566,9 @@ class Main():
             except Exception as Identifier:
                 return
 
-        self.Con = lite.connect("myDatabase.db")#Connects to the database
+        #Connects to the database
 
-        with self.Con:#Automatically closes the connection when it is done
+        with lite.connect("myDatabase.db") as self.Con:#Automatically closes the connection when it is done
             self.Cur = self.Con.cursor()#Creates the curser object
             try:
                 self.Cur.execute("INSERT INTO USERS(Username, Password, AccountType, Warnings) VALUES(?, ?, ?, ?)", (self.Username, self.Password,self.AccountType, self.Warnings))
@@ -1645,9 +1658,9 @@ class Main():
         ]
 
         #If the database dosn't exist it will create it if it does nothing will happen
-        self.Con = lite.connect("myDatabase.db")#Connects to the database
+        #Connects to the database
 
-        with self.Con:#Automatically closes the connection when it is done
+        with lite.connect("myDatabase.db") as self.Con:#Automatically closes the connection when it is done
             self.Cur = self.Con.cursor()#Creates the curser object
             try:
                 self.Cur.execute("CREATE TABLE Users(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)")#Creates the table
