@@ -52,7 +52,10 @@ class Main():
         
         self.Root = Root
         self.Root.title("Calculator")
-        self.Root.wm_iconbitmap("Icon.ico")
+
+        self.Icon_file = __file__[:-14] + "CalculatorIcon.ico"
+
+        self.Root.wm_iconbitmap(self.Icon_file)
         self.Root.configure(bg = self.Bg_Colour)
         self.Root.geometry("557x393")
         self.Frames.append(self.Root)
@@ -179,6 +182,7 @@ class Main():
             if(Frame == self.Frames[0] and i == 0):
                 Frame.rowconfigure(i, weight = 1)
     
+    '''
     def Settings(self):
 
         self.Setting_tl = TK.Toplevel(self.Root, bg = self.Bg_Colour)
@@ -254,13 +258,14 @@ class Main():
             self.Btn_Bg = self.Hex_Codes[2]
         if(self.Hex_Codes[3][0]):
             self.Btn_Active = self.Hex_Codes[3]
-        
+    
+    '''
 def Run():
     import tkinter as TK
 
     Root = TK.Tk()
 
-    Run = Main(Root)
+    Main(Root)
 
     while True:
         try:

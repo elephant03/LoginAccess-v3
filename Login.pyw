@@ -1706,6 +1706,9 @@ class Main():
     def __init__(self, root):
         #Creats the main window for the login screen to load into
 
+        #Changes the default root icon
+        root.wm_iconbitmap("MainIcon.ico")
+
         #Used incase the db doesn't exist to add all of the needed columns
         self.Title = [
             "UserName",
