@@ -1804,6 +1804,7 @@ class Main():
     These will simplify the GUI code and help to remove most of the rpetition in it
     '''
 
+    #Will add a frame to a set row or automatically pack it into the main_fr
     def AddFrame(self, Row = None, Column = None, Pack = True, Frame = None):
         if not Frame:
             Frame = self.Main_fr
