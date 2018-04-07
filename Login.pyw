@@ -1800,6 +1800,55 @@ class Main():
 
         self.Align_Grid(self.Login_fr)
 
+    '''
+    These will simplify the GUI code and help to remove most of the rpetition in it
+    '''
+
+    def AddFrame(self, Row = None, Column = None, Pack = True, Frame = None):
+        if not Frame:
+            Frame = self.Main_fr
+        self.Name = TK.Frame(Frame, bg = self.Background)
+        if Pack:
+            self.Name.pack(fill = TK.BOTH, expand = True)
+        else:
+            self.Name.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew")
+        
+        return self.Name
+        
+    def AddSpace_lbl(self, Row, Column, Frame, Span = 1):
+        self.Space_lbl = TK.Label(Frame, bg = self.Background, font = self.Font, foreground = self.Foreground)
+        self.Space_lbl.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = Span)
+
+        return self.Space_lbl
+    
+    def AddLabel(self, Row, Column, Frame, Text, Span = 1):
+        self.Space_lbl = TK.Label(Frame, bg = self.Background, font = self.Font, foreground = self.Foreground, text = Text)
+        self.Space_lbl.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = Span)
+
+        return self.Space_lbl
+    
+    def AddTitle_lbl(self, Row, Column, Frame, Title, Span = 1):
+        self.Title_lbl = TK.Label(Frame, bg = self.Background, font = self.TitleFont, foreground = self.Foreground, text = Title)
+        self.Title_lbl.grid(row = Row, column = Column, padx =2, pady = 2, sticky = "nsew", columnspan = Span)
+
+        return self.Title_lbl
+
+    def AddButton(self, Row, Column, Frame, Text, Span = 1):
+        '''
+        You must add your own command using the .config method
+        '''
+        self.Button = TK.Button(Frame, bg = self.Btn_Background, activebackground = self.Btn_Active, foreground = self.Foreground, font = self.Font, text = Text)
+        self.Button.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = Span)
+
+        return self.Button
+    
+    def AddQuit_btn(self, Row, Column, Frame, Span = 1):
+
+        self.Quit_btn = TK.Button(Frame, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active, foreground = self.Foreground, font = self.Font, text = "Quit", command = lambda: self.Quit())
+        self.Quit_btn.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = Span)
+
+        return self.Quit_btn
+
 
 #Will only run if it is the program originally started
 if __name__ == "__main__":
