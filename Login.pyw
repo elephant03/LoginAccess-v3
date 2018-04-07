@@ -455,9 +455,10 @@ class Main():
 
         self.Align_Grid(self.Customisation_fr)
 
+    #If the user changes any of their defults it will update those states
     def SaveChanges_Customisation(self):
-        print(self.TypeOrder_list)
 
+        #The reason this is done weirdly is due that on different computers the order is different- for some reason?
         if self.CustomisationEntry_list[self.TypeOrder_list.index("Background")].get() != "":
             self.Background = self.CustomisationEntry_list[self.TypeOrder_list.index("Background")].get()
             self.UpdateState_Background(self.Customisation_fr)
@@ -504,6 +505,7 @@ class Main():
 
         self.Back(self.Customisation_fr, 2)
     
+    #Creats the menu screen for the account settings
     def AccountSettings(self):
         
         self.Settings_fr.destroy()
@@ -536,9 +538,14 @@ class Main():
 
         self.Align_Grid(self.Account_fr)
     
+    #Deletes the users account
+    #IMPROVMENT
+    #Make a confirmation box to see if they really want to delete the account
     def DeleteAccount(self, Frame):
         
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("DELETE FROM Users WHERE Username = ?", (self.Username,))
@@ -548,6 +555,7 @@ class Main():
         
         self.Back(Frame, 0)
 
+    #The change username GUI
     def ChangeUsername(self):
 
         self.Account_fr.destroy()
@@ -579,13 +587,13 @@ class Main():
 
         self.Align_Grid(self.ChangeUsername_fr)
         
-    
+    #Accesses the database to officially change your username if its not taken
     def SaveChanges_Username(self):
         self.NewUsername = Hash.Hash(str(self.ChangeUsername_ent.get()))
 
-        
-
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
             
             try:
@@ -607,6 +615,7 @@ class Main():
 
         self.Back(self.ChangeUsername_fr, 1)
 
+    #The GUI of changeing the password
     def ChangePassword(self):
         
         self.Account_fr.destroy()
