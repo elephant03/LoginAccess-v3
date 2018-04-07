@@ -661,12 +661,13 @@ class Main():
 
         self.Align_Grid(self.ChangePassword_fr)
         
-    
+    #Will save the users new password providing their inputs were valid
     def SaveChanges_Password(self):
         self.NewPassword = Hash.Hash(str(self.ChangePassword_ent.get()))
         self.RepeatPassword = Hash.Hash(str(self.RepeatChangePassword_ent.get()))
         self.OldPassword = Hash.Hash(str(self.OldPassword_ent.get()))
 
+        #Checks the two new passwords are the same
         if self.NewPassword != self.RepeatPassword:
             self.Space_lbl.congfig(text = "The passwords didn't match")
             self.ChangePassword_ent.delete(0, 'end')
@@ -674,10 +675,9 @@ class Main():
             self.RepeatChangePassword_ent.delete(0, "end")
             return
 
-
-        
-
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
             
             try:
@@ -685,6 +685,7 @@ class Main():
 
                 self.UserPassword = self.Cur.fetchall()[0][0]
 
+                #Checks the password in the database to the one they entered
                 if self.UserPassword == self.OldPassword:
 
                     self.Cur.execute("UPDATE Users SET Password = ? WHERE Username = ?", (self.NewPassword, self.Username))
@@ -700,6 +701,7 @@ class Main():
 
         self.Back(self.ChangePassword_fr, 1)
     
+    #Change email GUI
     def AddChangeEmail(self):
                 
         self.Account_fr.destroy()
@@ -731,13 +733,14 @@ class Main():
 
         self.Align_Grid(self.AddEmail_fr)
         
-    
+    #Adds the new email into the database
     def SaveChanges_Email(self):
         self.NewEmail = Hash.Hash(str(self.AddEmail_ent.get()))
 
-        
-
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+
+            #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
             
             try:
@@ -747,6 +750,7 @@ class Main():
 
         self.Back(self.AddEmail_fr, 1)
     
+    #The other settings GUI
     def OtherSettings(self):
 
         self.Settings_fr.destroy()
@@ -764,19 +768,20 @@ class Main():
 
         self.Align_Grid(self.Other_fr)
     
+    #A help scren to guide you through the menus
     def MainMenu_Help(self):
         self.Help_tl = TK.Toplevel()
         self.Help_tl.title("Help")
         self.Help_tl.config(bg= self.Background)
 
-        self.ExplainationText = """I really cannot think why people will be confused here
-        Um..  i guess i will think about it latter
-        Cheese
+        self.ExplainationText = """This is a menu screen to adjust your settings.
+        All bare the deletion of your account can be reversed and readjusted
         """
 
         self.Explaination_lbl = TK.Label(self.Help_tl, bg = self.Background, foreground = self.Foreground, font = self.Font, text = self.ExplainationText)
         self.Explaination_lbl.pack(fill = TK.BOTH, expand= True)
 
+    #The tools menu GUI- will automaticaly display any python file that is in the tools folder
     def ToolsMenu(self):
 
         self.MainMenu_fr.destroy()
@@ -789,20 +794,31 @@ class Main():
         self.Space_lbl = TK.Label(self.ToolsMenu_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl.grid(row = 1, column = 0, sticky = "nsew", padx = 2, pady = 2)
 
+        #Creats an array to store the tools
         self.Tools_list = []
+
+        #imoorts the glob libary
         import glob
 
+        #Finds the current dirrectory
         self.Tools_File = __file__
+        #Removes the name of this file
         self.Tools_File = self.Tools_File[:-9]
+        #Adds the path to the tools to the current dirrectory
         self.Tools_File += r"\Moduals\Tools\*.pyw"
+        #Makes the file python readable
         self.Tools_File.replace("\\", "\\\\")
 
+        #Uses glob to get all of the tools files
         self.Files = glob.glob(self.Tools_File)
 
+        #Allows for the grid to work
         self.EndRow_Value = 2
 
+        #Loops through all of the tools
         for i in range(len(self.Files)):
 
+            #Imports the tool using the method at top of document
             self.directory, self.module_name = os.path.split(self.Files[i])
             self.module_name = os.path.splitext(self.module_name)[0]
 
@@ -814,12 +830,14 @@ class Main():
             finally:
                 sys.path[:] = self.path # restore
 
+            #Adds the button to run the tool
             self.Tools_btn = TK.Button(self.ToolsMenu_fr, bg = self.Btn_Background, activebackground = self.Btn_Active, foreground = self.Foreground, font = self.Font, text = self.module_name, command = lambda Num = i: self.RunTool(Num))
             self.Tools_btn.grid(row = i+2, column = 0, pady = 2, padx = 2, sticky = "nsew")
 
             self.EndRow_Value += 1
         
 
+        #Adds the space label and back button
         self.Space_lbl1 = TK.Label(self.ToolsMenu_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
         self.Space_lbl1.grid(row = self.EndRow_Value, column = 0, sticky = "nsew", padx = 2, pady = 2)
 
@@ -828,9 +846,11 @@ class Main():
 
         self.Align_Grid(self.ToolsMenu_fr)
 
+    #Will call the tools run function
     def RunTool(self, Num):
         self.Tools_list[Num].Run()
     
+    #See the tools menu comments just replace tools with games
     def GamesMenu(self):
         self.MainMenu_fr.destroy()
         self.GamesMenu_fr = TK.Frame(self.Main_fr, bg = self.Background)
@@ -884,6 +904,11 @@ class Main():
     def RunGame(self, Num):
         self.Games_list[Num].Run()
     
+    '''
+    The messager system
+    '''
+
+    #The message GUI
     def Messages(self):
         self.MainMenu_fr.destroy()
         self.Messages_fr = TK.Frame(self.Main_fr, bg = self.Background)
@@ -896,23 +921,27 @@ class Main():
         self.Space_lbl.grid(row = 1, column = 0, sticky = "nsew", padx = 2, pady = 2, columnspan = 3)
         
         
-
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
             self.Cur = self.Con.cursor()
+            #Get all of the messages related to the user
             try:
                 self.Cur.execute("SELECT Messages FROM Users WHERE Username = ?", (self.Username,))
                 for i in self.Cur:
                     for n in i:
                         self.Message_list = n.split(",")
+            #If non exist it will just diplay no messages
             except Exception:
                 self.Message_list = ["You have no messages!"]
         
+        #Display all of the messages
         for i in self.Message_list:
             if i == "":
                 self.Message_list.pop(self.Message_list.index(i))
         if not self.Message_list:
             self.Message_list = ["You have no messages!"]
         
+        #displays the full message text
         for i in range(len(self.Message_list)):
             
             self.IndividualMessage_fr = TK.Frame(self.Messages_fr, bg = self.Background)
@@ -946,6 +975,7 @@ class Main():
 
         self.Align_Grid(self.Messages_fr)
 
+    #Alows you to delte messages
     def DeleteMessage(self, Num):
         self.Message_list.pop(Num)
         
@@ -961,6 +991,7 @@ class Main():
         self.MainMenu_fr = TK.Frame(bg = self.Background)
         self.Messages()
     
+    #GUI to send messages
     def NewMessage(self):
         self.Messages_fr.destroy()
         self.NewMessage_fr = TK.Frame(self.Main_fr, bg = self.Background)
@@ -1003,6 +1034,7 @@ class Main():
 
         self.Align_Grid(self.NewMessage_fr)
 
+    #The main function ot add the messages to the db
     def SendMessage(self):
 
         if self.SendTo_ent.get() == "":
