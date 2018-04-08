@@ -527,7 +527,7 @@ class Main():
         self.AddEmail_btn = TK.Button(self.Account_fr, bg = self.Btn_Background, activebackground = self.Btn_Active, foreground = self.Foreground, font = self.Font, text = "Add/Change Email", command = lambda: self.AddChangeEmail())
         self.AddEmail_btn.grid(row = 4, column = 0, padx = 2, pady = 2, sticky = "nsew")
 
-        self.DeleteAccount_btn = TK.Button(self.Account_fr, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active, foreground = self.Foreground, font = self.Font, text = "Delete Account", command = lambda: self.DeleteAccount(self.Account_fr))
+        self.DeleteAccount_btn = TK.Button(self.Account_fr, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active, foreground = self.Foreground, font = self.Font, text = "Delete Account", command = lambda: self.DeleteAccountGUI(self.Account_fr))
         self.DeleteAccount_btn.grid(row = 5, column = 0, sticky = "nsew", padx = 2, pady = 2)
 
         self.Space_lbl1 = TK.Label(self.Account_fr, bg = self.Background, foreground = self.Foreground, font = self.Font)
@@ -539,21 +539,58 @@ class Main():
         self.Align_Grid(self.Account_fr)
     
     #Deletes the users account
-    #IMPROVMENT
-    #Make a confirmation box to see if they really want to delete the account
+    def DeleteAccountGUI(self, Frame):
+        self.DeleteAccount_tl = TK.Toplevel(bg = self.Background)
+
+        self.Confurmation_lbl = TK.Label(self.DeleteAccount_tl, bg = self.Background, foreground = self.Foreground, font = self.Font, text = "Are you sure you want to delete your account?\nPlease enter your password to continue.\nTHIS CANNOT BE REVSERED")
+        self.Confurmation_lbl.grid(row = 0, column = 0, padx = 2, pady = 2, sticky = "nsew", columnspan = 2)
+
+        self.Space_lbl = self.AddSpace_lbl(1, 0, self.DeleteAccount_tl, Span = 2)
+
+        self.ConfurmPassword_ent = TK.Entry(self.DeleteAccount_tl, foreground = self.Foreground, font = self.Font, show = "•")
+        self.ConfurmPassword_ent.grid(row = 2, column = 0, padx = 2, pady = 2, sticky = "nsew", columnspan = 2)
+        self.ConfurmPassword_ent.focus()
+
+        self.Confurmation_btn = TK.Button(self.DeleteAccount_tl, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active, font = self.Font, text = "DELETE ACCOUNT", command = lambda: self.DeleteAccount(Frame))
+        self.Confurmation_btn.grid(row = 4, column = 1, padx = 2, pady = 2, sticky = "nsew")
+
+        self.Back_btn = self.AddButton(4, 0, self.DeleteAccount_tl, "Back")
+        self.Back_btn.config(command = lambda: self.Destroy(self.DeleteAccount_tl) and self.Back(self.Account_fr, 2))
+
+        self.ConfurmPassword_ent.bind("<Return>", lambda e: self.DeleteAccount(Frame))
+
+        return
+
     def DeleteAccount(self, Frame):
         
+        self.Password = Hash.Hash(self.ConfurmPassword_ent.get())
+
         #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
             #creats a curser object to interact with the database
             self.Cur = self.Con.cursor()
-            try:
-                self.Cur.execute("DELETE FROM Users WHERE Username = ?", (self.Username,))
-            except Exception:
-                pass
 
-        
-        self.Back(Frame, 0)
+            try:
+                self.Cur.execute("SELECT Password FROM Users WHERE Username = ?", (self.Username,))
+                self.UserPass = self.Cur.fetchall()[0][0]
+
+                if self.UserPass == self.Password:
+                    
+                    self.Cur.execute("DELETE FROM Users WHERE Username = ?", (self.Username,))
+
+                    self.DeleteAccount_tl.destroy()
+                    self.Back(Frame, 0)
+                else:
+                    self.Space_lbl.config(text = "Sorry your password is incorrect")
+                    self.ConfurmPassword_ent.delete(0, "end")
+            
+            except Exception as Identifier:
+                print(Identifier)
+    
+    def Destroy(self, Frame):
+        Frame.destroy()
+
+        return
 
     #The change username GUI
     def ChangeUsername(self):
