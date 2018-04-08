@@ -1439,6 +1439,7 @@ class Main():
 
         self.Align_Grid(self.Help_tl)
     
+    #A method used in production to call when a feature isn't finished yet
     def WorkInProgress(self):
         self.WIP_tl = TK.Toplevel(bg = self.Background)
         self.WIP_lbl = TK.Label(self.WIP_tl, font = self.Font, foreground = self.Foreground, bg = self.Background, text = "This feature is currently a work in progress, we appologise fore any inconvinience")
@@ -1501,8 +1502,12 @@ class Main():
 
 
     def PasswordReset(self):
+        #The password reset main logic
+
+        #Clears the space labels text
         self.Space_lbl.config(text = "")
 
+        #Gets the users username and password
         self.Username = Hash.Hash(str(self.Username_ent.get()))
         self.Email = Hash.Hash(str(self.Email_ent.get()))
 
@@ -1645,8 +1650,24 @@ class Main():
         #These are hashed so i never see there real passwords
         self.Password = str(Hash.Hash(str(self.Password_ent.get())))
         self.RepeatPassword = str(Hash.Hash(str(self.RepeatPassword_ent.get())))
-        self.AccountType = "standered"
         self.Warnings = 0
+
+        #Checks to see if the database is empty- if it is the user will automatically be set to owner
+        #Connects to the database
+        with lite.connect("myDatabase.db") as self.Con:
+            #Creats a curser object to interact with the database
+            self.Cur = self.Con.cursor()
+
+            try:
+                self.Cur.execute("SELECT * FROM Users")
+                
+                if not self.Cur.fetchall():
+                    self.AccountType = "owner"
+                else:
+                    self.AccountType = "standered"
+            except Exception as Identifier:
+                print(Identifier)
+                pass
 
         #Makes sure your passwords match
         if self.Password == self.RepeatPassword:
