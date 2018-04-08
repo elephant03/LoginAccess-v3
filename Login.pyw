@@ -1587,22 +1587,31 @@ class Main():
                 self.Password_ent.delete(0, "end")
                 return
     
-    def Back(self, CurrentFrame, GoTo):
+    def Back(self, CurrentFrame, GoToNum):
+        '''
+        0 = LoginScreen
+        1 = MainMenu
+        2 = Settings
+        3 = AccountSettings
+        4 = AdminMenu
+        5 = VeiwBugs
+        6 = OwnersMenu
+        '''
         CurrentFrame.destroy()
 
-        if GoTo == 0:
+        if GoToNum == 0:
             self.LoginScreen()
-        elif GoTo == 1:
+        elif GoToNum == 1:
             self.MainMenu()
-        elif GoTo == 2:
+        elif GoToNum == 2:
             self.Settings()
-        elif GoTo == 3:
+        elif GoToNum == 3:
             self.AccountSettings()
-        elif GoTo == 4:
+        elif GoToNum == 4:
             self.AdminMenu()
-        elif GoTo == 5:
+        elif GoToNum == 5:
             self.ViewBugs()
-        elif GoTo == 6:
+        elif GoToNum == 6:
             self.OwnerMenu()
         else:
             pass
