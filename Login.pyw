@@ -1439,14 +1439,14 @@ class Main():
 
         self.Align_Grid(self.Help_tl)
     
-    #Allows a user to reset there password if they have forgoten it and put in there email
     def WorkInProgress(self):
         self.WIP_tl = TK.Toplevel(bg = self.Background)
         self.WIP_lbl = TK.Label(self.WIP_tl, font = self.Font, foreground = self.Foreground, bg = self.Background, text = "This feature is currently a work in progress, we appologise fore any inconvinience")
         self.WIP_lbl.grid(row = 0, column = 0, sticky = "nsew")
 
         self.Align_Grid(self.WIP_tl)
-    
+
+    #Allows a user to reset there password if they have forgoten it and put in there email
     def ResetPassword(self):
         self.Help_tl.destroy()
         self.Login_fr.destroy()
@@ -1554,32 +1554,47 @@ class Main():
 
     
     def Quit(self):
+        #Exits the program
         root.destroy()
 
     def Login(self):
+        '''
+        Checks the users login details and if they match ones in the datbase will log the user in
+        '''
         
+        #Hash the username and password for security
         self.Username = Hash.Hash(str(self.Username_ent.get()))
         self.Password = Hash.Hash(str(self.Password_ent.get()))
 
+        #Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+            #Creats the curser object
             self.Cur = self.Con.cursor()
             try:
+                #Reads the password in the database related to the username given
                 self.Cur.execute("SELECT Password FROM Users WHERE UserName = ?", ((self.Username,)))
 
                 self.UserPassword = self.Cur.fetchall()[0][0]
             except Exception:
+                #If the username doesn't match one in the database
                 self.Space_lbl.config(text = "Username/Password is incorrect")
+
+                #Clears the users inputs
                 self.Username_ent.delete(0, "end")
                 self.Password_ent.delete(0, "end")
                 return
 
+            #Checks the passwords match
             if self.Password == self.UserPassword:
                 self.Username_ent.delete(0, "end")
                 self.Password_ent.delete(0, "end")
 
+                #Call the main menu
                 self.MainMenu()
 
                 return
+            
+            #If they don't match don't log the user in
             else:
                 self.Space_lbl.config(text = "Username/Password is incorrect")
                 self.Username_ent.focus()
@@ -1587,6 +1602,7 @@ class Main():
                 self.Password_ent.delete(0, "end")
                 return
     
+    #The main method behind the back buttons
     def Back(self, CurrentFrame, GoToNum):
         '''
         0 = LoginScreen
@@ -1597,8 +1613,10 @@ class Main():
         5 = VeiwBugs
         6 = OwnersMenu
         '''
+        #Destroys the frame you are currently on
         CurrentFrame.destroy()
 
+        #Loads the new frame area based on number passed
         if GoToNum == 0:
             self.LoginScreen()
         elif GoToNum == 1:
@@ -1615,6 +1633,8 @@ class Main():
             self.OwnerMenu()
         else:
             pass
+        
+        return
     
     def CreateAccount(self):
         #Clears the space lbl
