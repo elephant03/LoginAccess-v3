@@ -20,6 +20,8 @@ Version Num | Date Completed
 3.1 | 2018/04/09
 
 
-DESCRIPTION: A login program which will have user authencation and will be able to run my other programes when placed into the correct folder
+### Description
+A login program which will have user authencation and will be able to run my other programes when placed into the correct folder
 
-REQIRAMENTS: Python 3.X (written in 3.6) with standered python libary
+### Requirments 
+Python 3.X (written in 3.6) with standered python libary
