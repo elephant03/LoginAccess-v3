@@ -1455,6 +1455,7 @@ class Main():
 
         self.Back(self.BugDetails_fr, 5)
 
+    # Shows the warning GUI
     def GiveWarning(self):
         self.AdminMenu_fr.destroy()
         self.GiveWarning_fr = TK.Frame(self.Main_fr, bg=self.Background)
@@ -1675,16 +1676,21 @@ class Main():
 
         self.Align_Grid(self.ChangeAccountType_fr)
 
+    # Updates the account type in the database
     def ChangeAccountType(self):
+        # Gets the type of account given to the user
         self.NewAccountType = self.StrVar.get()
         self.TargetUsername = Hash.Hash(str(self.TargetUsername_ent.get()))
 
+        # Connects to the database
         with lite.connect("myDatabase.db") as self.Con:
+            # Creats a cursor object
             self.Cur = self.Con.cursor()
             try:
                 self.Cur.execute("UPDATE Users SET AccountType = ? WHERE Username = ?",
                                  (self.NewAccountType.lower(), self.TargetUsername))
             except Exception as Identifier:
+                # If there is an error it will tell the user
                 self.Space_lbl.config(text=Identifier)
 
         self.Back(self.ChangeAccountType_fr, 6)
