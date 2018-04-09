@@ -1,12 +1,12 @@
-def Email(EmailAdress, NewPassword = None, VerifyNum = None):
+def Email(EmailAdress, NewPassword=None, VerifyNum=None):
     import smtplib
 
-    gmail_user = 'LoginAccess3.0@gmail.com'  
+    gmail_user = 'LoginAccess3.0@gmail.com'
     gmail_password = 'Cake1234'
 
-    sent_from = gmail_user  
-    to = [EmailAdress]  
-    #subject = 'OMG Super Important Message'  
+    sent_from = gmail_user
+    to = [EmailAdress]
+    #subject = 'OMG Super Important Message'
     #body = "Hey, what's up?\n\n- You"
 
     if NewPassword:
@@ -22,7 +22,7 @@ def Email(EmailAdress, NewPassword = None, VerifyNum = None):
 
         -This is an automated email: if you do not know why you are getting this please ignore it
         -Do not reply to this adress
-        """.format(NewPassword = NewPassword)
+        """.format(NewPassword=NewPassword)
     elif VerifyNum:
         email_text = """
         Hello LoginAccess user!
@@ -35,9 +35,9 @@ def Email(EmailAdress, NewPassword = None, VerifyNum = None):
 
         -This is an automated email: if you do not know why you are getting this please ignore it
         -Do not reply to this adress
-        """.format(VerifyNum = VerifyNum)
+        """.format(VerifyNum=VerifyNum)
 
-    try:  
+    try:
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
         server.ehlo()
         server.login(gmail_user, gmail_password)
@@ -46,5 +46,5 @@ def Email(EmailAdress, NewPassword = None, VerifyNum = None):
 
         return True
     except Exception as Identifier:
-        print(Identifier)  
+        print(Identifier)
         return False

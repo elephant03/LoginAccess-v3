@@ -4,11 +4,13 @@ needing to fill in the brakets- from my standpoit that is too hard to do this la
 might work
 -Good luck me
 '''
+
+
 class Main():
     Defults = {
         "Bg_Colour": "#7eccf7",
 
-        "Font": ("Arial", 15), 
+        "Font": ("Arial", 15),
         "Title_Font": ("Arial", 45, "bold"),
         "SubTitle_Font": ("Arial", 20, "bold"),
         "Font_Colour": "Black",
@@ -16,23 +18,21 @@ class Main():
 
         "Btn_Bg": "#2db4ff",
         "Btn_Active": "#2da9ff",
-    
+
         "QuitBtn_Bg": "#ef2804",
         "QuitBtn_Active": "#e82502"
     }
 
     Bg_Colour = Defults["Bg_Colour"]
 
-
     Font = Defults["Font"]
     Title_Font = Defults["Title_Font"]
     SubTitle_Font = Defults["SubTitle_Font"]
     Font_Colour = Defults["Font_Colour"]
 
-
     Btn_Bg = Defults["Btn_Bg"]
     Btn_Active = Defults["Btn_Active"]
-    
+
     QuitBtn_Bg = Defults["QuitBtn_Bg"]
     QuitBtn_Active = Defults["QuitBtn_Active"]
 
@@ -49,57 +49,61 @@ class Main():
         import tkinter as TK
 
         self.Frames = []
-        
+
         self.Root = Root
         self.Root.title("Calculator")
 
         self.Icon_file = __file__[:-14] + "CalculatorIcon.ico"
 
         self.Root.wm_iconbitmap(self.Icon_file)
-        self.Root.configure(bg = self.Bg_Colour)
+        self.Root.configure(bg=self.Bg_Colour)
         self.Root.geometry("557x393")
         self.Frames.append(self.Root)
-        
-        self.Top_Frame = TK.Frame(self.Root, bg = self.Bg_Colour)
-        self.Top_Frame.grid(row = 0, column = 0, columnspan = 2, sticky = "nsew")
+
+        self.Top_Frame = TK.Frame(self.Root, bg=self.Bg_Colour)
+        self.Top_Frame.grid(row=0, column=0, columnspan=2, sticky="nsew")
         self.Frames.append(self.Top_Frame)
-        
-        self.Display_lbl = TK.Label(self.Top_Frame, bg = "white", text = "", font = self.Font, fg = self.Font_Colour, activeforeground = self.Font_Colour)
-        self.Display_lbl.grid(row = 0, column = 0, columnspan = 5, sticky = "nsew")
+
+        self.Display_lbl = TK.Label(self.Top_Frame, bg="white", text="",
+                                    font=self.Font, fg=self.Font_Colour, activeforeground=self.Font_Colour)
+        self.Display_lbl.grid(row=0, column=0, columnspan=5, sticky="nsew")
 
         #self.Setting_btn = TK.Button(self.Top_Frame, bg = self.Btn_Bg, text = "Settings", activebackground = self.Btn_Active, font = self.Font, fg = self.Font_Colour, activeforeground = self.Font_Colour, command = lambda: self.Settings())
         #self.Setting_btn.grid(row = 0, column = 5, sticky = "nsew")
 
-        self.Number_fr = TK.Frame(self.Root, bg = self.Bg_Colour)
-        self.Number_fr.grid(row = 1, column = 0, sticky = "nsew")
+        self.Number_fr = TK.Frame(self.Root, bg=self.Bg_Colour)
+        self.Number_fr.grid(row=1, column=0, sticky="nsew")
         self.Frames.append(self.Number_fr)
 
-        self.Numbers = [[1,2,3, " "],[4,5,6, " "],[7,8,9, " "],[".",0, "Ans", " "]]
-        self.Symbols = [["+","-","*","/"],["Power","Root"," ", "="],["C","Del", "(", ")"]]
-        
+        self.Numbers = [[1, 2, 3, " "], [4, 5, 6, " "],
+                        [7, 8, 9, " "], [".", 0, "Ans", " "]]
+        self.Symbols = [["+", "-", "*", "/"],
+                        ["Power", "Root", " ", "="], ["C", "Del", "(", ")"]]
+
         self.No_Buttons = []
 
-        for i in range(0,len(self.Numbers)):
-            for n in range(0,len(self.Numbers[i])):
-                self.No_Btn = TK.Button(self.Number_fr, text = self.Numbers[i][n], font = self.Font, fg = self.Font_Colour, activeforeground = self.Font_Colour, bg = self.Btn_Bg, activebackground = self.Btn_Active, command = lambda Symbol = self.Numbers[i][n]: self.Sum(Symbol))
-                self.No_Btn.grid(row = i, column = n, sticky = "nsew")
+        for i in range(0, len(self.Numbers)):
+            for n in range(0, len(self.Numbers[i])):
+                self.No_Btn = TK.Button(self.Number_fr, text=self.Numbers[i][n], font=self.Font, fg=self.Font_Colour, activeforeground=self.Font_Colour,
+                                        bg=self.Btn_Bg, activebackground=self.Btn_Active, command=lambda Symbol=self.Numbers[i][n]: self.Sum(Symbol))
+                self.No_Btn.grid(row=i, column=n, sticky="nsew")
                 if(self.Numbers[i][n] == " "):
-                    self.No_Btn.configure(state = TK.DISABLED)
-        
-        self.Symbols_fr = TK.Frame(self.Root, bg = self.Bg_Colour)
-        self.Symbols_fr.grid(row = 1,column = 1, sticky = "nsew")
+                    self.No_Btn.configure(state=TK.DISABLED)
+
+        self.Symbols_fr = TK.Frame(self.Root, bg=self.Bg_Colour)
+        self.Symbols_fr.grid(row=1, column=1, sticky="nsew")
         self.Frames.append(self.Symbols_fr)
 
         for i in range(0, len(self.Symbols)):
             for n in range(0, len(self.Symbols[i])):
-                self.Symbol_btn = TK.Button(self.Symbols_fr, text = self.Symbols[i][n], font = self.Font, fg = self.Font_Colour, activeforeground = self.Font_Colour, bg = self.Btn_Bg, activebackground = self.Btn_Active, command = lambda Symbol = self.Symbols[i][n]: self.Sum(Symbol))
-                self.Symbol_btn.grid(row = n, column = i, sticky = "nsew")
+                self.Symbol_btn = TK.Button(self.Symbols_fr, text=self.Symbols[i][n], font=self.Font, fg=self.Font_Colour, activeforeground=self.Font_Colour,
+                                            bg=self.Btn_Bg, activebackground=self.Btn_Active, command=lambda Symbol=self.Symbols[i][n]: self.Sum(Symbol))
+                self.Symbol_btn.grid(row=n, column=i, sticky="nsew")
                 if(self.Symbols[i][n] == " "):
-                    self.Symbol_btn.configure(state = TK.DISABLED)
+                    self.Symbol_btn.configure(state=TK.DISABLED)
 
         for i in range(len(self.Frames)):
             self.Align_Grid(self.Frames[i])
-    
 
     def Sum(self, Symbol):
 
@@ -109,7 +113,7 @@ class Main():
             self.Sum_str = ""
             self.Display_str = ""
 
-            self.Display_lbl.configure(text = self.Display_str)
+            self.Display_lbl.configure(text=self.Display_str)
             self.Display_lbl.update()
 
             self.Answered = False
@@ -124,42 +128,43 @@ class Main():
         if(str(Symbol) == "Root"):
             self.Sum_Symbol = "**(1/"
             self.Display_Symbol = "√"
-        
+
         if(str(Symbol) == "C"):
             self.Sum_Symbol = ""
             self.Display_Symbol = ""
             self.Sum_str = ""
             self.Display_str = ""
-        
+
         if(str(Symbol) == "Ans"):
             self.Sum_Symbol = self.Answer
             self.Display_Symbol = self.Answer
-        
+
         if(str(Symbol) == "="):
             self.Sum_Symbol = ""
             try:
                 self.Answer = str(eval(self.Sum_str))
                 self.Display_str = ""
                 self.Display_Symbol = self.Answer
-            
+
             except:
                 self.Sum_Symbol = ""
                 self.Display_Symbol = ""
                 self.Sum_str = ""
                 self.Display_str = ""
 
-                self.Display_lbl.configure(text = self.Display_str)
+                self.Display_lbl.configure(text=self.Display_str)
                 self.Display_lbl.update()
 
                 self.Sum_Symbol = ""
                 self.Display_Symbol = "Error"
-            
+
             self.Answered = True
 
         if(str(Symbol) == "Del"):
             self.Sum_Symbol = ""
             self.Display_Symbol = ""
-            self.Sum_str = self.Sum_str[:-len(self.Sum_str_List[len(self.Sum_str_List)-1])]
+            self.Sum_str = self.Sum_str[:-
+                                        len(self.Sum_str_List[len(self.Sum_str_List)-1])]
             self.Display_str = self.Display_str[:-1]
             self.Sum_str_List = self.Sum_str_List[:-1]
         else:
@@ -168,20 +173,20 @@ class Main():
         self.Sum_str += str(self.Sum_Symbol)
         self.Display_str += str(self.Display_Symbol)
 
-        self.Display_lbl.configure(text = self.Display_str)
+        self.Display_lbl.configure(text=self.Display_str)
         self.Display_lbl.update()
 
-    
     def Align_Grid(self, Frame):
+        # Aligns the grid
         self.Grid_Size = Frame.grid_size()
 
         for i in range(self.Grid_Size[0]):
-            Frame.columnconfigure(i, weight = 3)
-        for i in range( self.Grid_Size[1]):
-            Frame.rowconfigure(i, weight = 3)
+            Frame.columnconfigure(i, weight=3)
+        for i in range(self.Grid_Size[1]):
+            Frame.rowconfigure(i, weight=3)
             if(Frame == self.Frames[0] and i == 0):
-                Frame.rowconfigure(i, weight = 1)
-    
+                Frame.rowconfigure(i, weight=1)
+
     '''
     def Settings(self):
 
@@ -260,6 +265,8 @@ class Main():
             self.Btn_Active = self.Hex_Codes[3]
     
     '''
+
+
 def Run():
     import tkinter as TK
 
@@ -272,7 +279,7 @@ def Run():
             Root.update_idletasks()
             Root.update()
         except:
-            break 
+            break
 
 
 if __name__ == "__main__":
