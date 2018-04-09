@@ -1,6 +1,9 @@
 # LoginAccess GUI
 
-## Current Version
+## Current Release Version
+3.1
+
+## Current Version In Progress
 3.2
 
 ## AUTHOR(S): 
