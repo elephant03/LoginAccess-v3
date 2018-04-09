@@ -249,65 +249,46 @@ class Main():
         self.SetDefults(Update=False)  # Resets all of the defult values
 
         # Creats the login frame
-        self.Login_fr = TK.Frame(self.Main_fr, bg=self.Background)
-        self.Login_fr.pack(fill=TK.BOTH, expand=True)
+        self.Login_fr = self.AddFrame()
 
         # Titles the screen
-        self.Title_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                  font=self.TitleFont, foreground=self.Foreground, text="Please Login...")
-        self.Title_lbl.grid(row=0, column=0, sticky="nsew",
-                            padx=2, pady=2, columnspan=3)
+        self.Title_lbl = self.AddTitle_lbl(
+            0, 0, self.Login_fr, "Please Login...", CSpan=3)
 
-        self.Space_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                  foreground=self.Foreground, font=self.Font, text=SpaceText)
-        self.Space_lbl.grid(row=1, column=0, columnspan=2,
-                            padx=2, pady=2, sticky="nsew")
+        self.Space_lbl = self.AddSpace_lbl(1, 0, self.Login_fr, 2)
 
         # Shows where to type your username
-        self.Username_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Username:")
-        self.Username_lbl.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
+        self.Username_lbl = self.AddLabel(2, 0, self.Login_fr, "Username:")
 
         # Gives a place to type in your username
-        self.Username_ent = TK.Entry(
-            self.Login_fr, font=self.Font, foreground=self.Foreground)
-        self.Username_ent.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
-        self.Username_ent.focus()
+        self.Username_ent = self.AddEntry(self.Login_fr, 2, 1, Focus=True)
 
         # Shows where to type your password
-        self.Password_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Password:")
-        self.Password_lbl.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
+        self.Password_lbl = self.AddLabel(3, 0, self.Login_fr, "Password:")
 
         # Gives a place to type in your password which hides the text
-        self.Password_ent = TK.Entry(
-            self.Login_fr, font=self.Font, foreground=self.Foreground, show="•")
-        self.Password_ent.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
+        self.Password_ent = self.AddEntry(self.Login_fr, 3, 1, Show="•")
 
         # Will provide instructions of what to do if you cannot work it out
-        self.Help_btn = TK.Button(self.Login_fr, bg=self.Background, activebackground=self.Background,
-                                  font=self.Font, foreground=self.Foreground, text="?", command=lambda: self.Help())
-        self.Help_btn.grid(row=2, column=2, sticky="nsew",
-                           padx=1, pady=2, rowspan=2)
+        self.Help_btn = self.AddButton(2, 2, self.Login_fr, "?", RSpan=2)
+        self.Help_btn.config(command = lambda: self.Help())
 
         # Will house and grid all of the buttons
-        self.Button_fr = TK.Frame(self.Login_fr, bg=self.Background)
-        self.Button_fr.grid(row=4, column=0, columnspan=3,
-                            sticky="nsew", padx=2, pady=2)
+        self.Button_fr = self.AddFrame(Row=4, Column=0, Pack=False, Frame=self.Login_fr, CSpan = 3)
 
         # When clicked will run the quting processes
-        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
-                                  font=self.Font, foreground=self.Foreground, text="Quit", command=lambda: self.Quit())
+        self.QUIT_btn=TK.Button(self.Button_fr, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active,
+                                  font = self.Font, foreground = self.Foreground, text = "Quit", command = lambda: self.Quit())
         self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
         # When clicked will run the login processes
         self.Login_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
-                                   font=self.Font, foreground=self.Foreground, text="Login", command=lambda: self.Login())
+                                   font = self.Font, foreground = self.Foreground, text = "Login", command = lambda: self.Login())
         self.Login_btn.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
 
         # When clicked will run the newaccount processes
         self.NewAccount_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                        font=self.Font, foreground=self.Foreground, text="New Account", command=lambda: self.NewAccount())
+                                        font = self.Font, foreground = self.Foreground, text = "New Account", command = lambda: self.NewAccount())
         self.NewAccount_btn.grid(
             row=0, column=2, sticky="nsew", padx=2, pady=2)
 
@@ -536,7 +517,6 @@ class Main():
         self.Align_Grid(self.Button_fr)
 
         self.Align_Grid(self.NewAccount_fr)
-
 
     '''
     Loads the main menu screen for when the user has successfuly loged in
@@ -964,7 +944,8 @@ class Main():
         self.Confurmation_lbl.grid(
             row=0, column=0, padx=2, pady=2, sticky="nsew", columnspan=2)
 
-        self.Space_lbl = self.AddSpace_lbl(1, 0, self.DeleteAccount_tl, Span=2)
+        self.Space_lbl = self.AddSpace_lbl(
+            1, 0, self.DeleteAccount_tl, CSpan=2)
 
         self.ConfurmPassword_ent = TK.Entry(
             self.DeleteAccount_tl, foreground=self.Foreground, font=self.Font, show="•")
@@ -2219,7 +2200,6 @@ class Main():
         # Exits the program
         root.destroy()
 
-    
     # The main method behind the back buttons
     def Back(self, CurrentFrame, GoToNum):
         '''
@@ -2254,13 +2234,12 @@ class Main():
 
         return
 
-
     '''
     These will simplify the GUI code and help to remove most of the rpetition in it
     '''
 
     # Will add a frame to a set row or automatically pack it into the main_fr
-    def AddFrame(self, Row=None, Column=None, Pack=True, Frame=None):
+    def AddFrame(self, Row=None, Column=None, Pack=True, Frame=None, CSpan=1, RSpan=1):
         if not Frame:
             Frame = self.Main_fr
         self.Name = TK.Frame(Frame, bg=self.Background)
@@ -2268,93 +2247,95 @@ class Main():
             self.Name.pack(fill=TK.BOTH, expand=True)
         else:
             self.Name.grid(row=Row, column=Column,
-                           padx=2, pady=2, sticky="nsew")
+                           padx=2, pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan )
 
         return self.Name
 
-    def AddSpace_lbl(self, Row, Column, Frame, Span=1):
+    def AddSpace_lbl(self, Row, Column, Frame, CSpan=1, RSpan=1):
         self.Space_lbl = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground)
         self.Space_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=Span)
+                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Space_lbl
 
-    def AddLabel(self, Row, Column, Frame, Text, Span=1):
+    def AddLabel(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
         self.Space_lbl = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground, text=Text)
         self.Space_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=Span)
+                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Space_lbl
 
-    def AddTitle_lbl(self, Row, Column, Frame, Title, Span=1):
+    def AddTitle_lbl(self, Row, Column, Frame, Title, CSpan=1, RSpan=1):
         self.Title_lbl = TK.Label(
             Frame, bg=self.Background, font=self.TitleFont, foreground=self.Foreground, text=Title)
         self.Title_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=Span)
+                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Title_lbl
 
-    def AddButton(self, Row, Column, Frame, Text, Span=1):
+    def AddButton(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
         self.Button = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=Span)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Button
 
-    def AddQuit_btn(self, Row, Column, Frame, Span=1):
+    def AddQuit_btn(self, Row, Column, Frame, CSpan=1, RSpan=1):
 
         self.Quit_btn = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
                                   foreground=self.Foreground, font=self.Font, text="Quit", command=lambda: self.Quit())
         self.Quit_btn.grid(row=Row, column=Column, padx=2,
-                           pady=2, sticky="nsew", columnspan=Span)
+                           pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Quit_btn
 
-    def AddPositive_btn(self, Row, Column, Frame, Text, Span=1):
+    def AddPositive_btn(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
         self.Button = TK.Button(Frame, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=Span)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Button
 
-    def AddEntry(self, Frame, Row, Column, Span=1, Focus=False, Show=""):
+    def AddEntry(self, Frame, Row, Column, CSpan=1, Focus=False, Show="", RSpan=1):
         self.Entry = TK.Entry(
             Frame, font=self.Font, foreground=self.Foreground)
 
         if Show:
             self.Entry.config(show=Show)
         self.Entry.grid(row=Row, column=Column, sticky="nsew",
-                        padx=2, pady=2, columnspan=Span)
+                        padx=2, pady=2, columnspan=CSpan)
         if Focus:
             self.Entry.focus()
+
+        self.Entry.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = CSpan, rowspan = RSpan)
         return self.Entry
 
-    def AddNegetive_btn(self, Frame, Row, Column, Text, Span=1):
+    def AddNegetive_btn(self, Frame, Row, Column, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
         self.Button = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=Span)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
 
         return self.Button
 
-    def AddBack_btn(self, Frame, CurrentFrame, BackNum, Row, Column, Span=1):
+    def AddBack_btn(self, Frame, CurrentFrame, BackNum, Row, Column, CSpan=1, RSpan=1):
         self.Back_btn = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
                                   font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(CurrentFrame, BackNum))
         self.Back_btn.grid(row=Row, column=Column,
-                           sticky="nsew", padx=2, pady=2, columnspan=Span)
+                           sticky="nsew", padx=2, pady=2, columnspan=CSpan, rowspan = RSpan)
         return
 
 
