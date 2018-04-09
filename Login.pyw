@@ -201,6 +201,343 @@ class Main():
             pass
     # Finally they are over
 
+    def __init__(self, root):
+        # Creats the main window for the login screen to load into
+
+        # Changes the default root icon
+        root.wm_iconbitmap("MainIcon.ico")
+
+        # Used incase the db doesn't exist to add all of the needed columns
+        self.Title = [
+            "UserName",
+            "Password",
+            "AccountType",
+            "Warnings",
+            "Email",
+            "Messages",
+        ]
+
+        # If the database dosn't exist it will create it if it does nothing will happen
+        # Connects to the database
+
+        # Automatically closes the connection when it is done
+        with lite.connect("myDatabase.db") as self.Con:
+            self.Cur = self.Con.cursor()  # Creates the curser object
+            try:
+                # Creates the table
+                self.Cur.execute(
+                    "CREATE TABLE Users(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)")
+                for i in range(len(self.Title)):  # Adds the kwargs to the table
+                    self.Cur.execute("ALTER TABLE Users ADD COLUMN {ColumnName} TEXT".format(
+                        ColumnName=str(self.Title[i]), ))
+                pass
+            except Exception:  # If the databse or table already exist it will exit
+                pass
+
+        # Sets the main frame- this will achally control the screen instead of the root
+        self.Main_fr = TK.Frame(root, bg="#7eccf7")
+        self.Main_fr.pack(fill=TK.BOTH, expand=True)
+
+        # Sets all of the GUI personilation varibes to their defult value
+        self.SetDefults(Update=False)
+
+        # Calls the login screen
+        self.LoginScreen()
+
+    def LoginScreen(self, SpaceText=""):
+        # Sets up the login screen for entering usernames and passwords
+        self.SetDefults(Update=False)  # Resets all of the defult values
+
+        # Creats the login frame
+        self.Login_fr = TK.Frame(self.Main_fr, bg=self.Background)
+        self.Login_fr.pack(fill=TK.BOTH, expand=True)
+
+        # Titles the screen
+        self.Title_lbl = TK.Label(self.Login_fr, bg=self.Background,
+                                  font=self.TitleFont, foreground=self.Foreground, text="Please Login...")
+        self.Title_lbl.grid(row=0, column=0, sticky="nsew",
+                            padx=2, pady=2, columnspan=3)
+
+        self.Space_lbl = TK.Label(self.Login_fr, bg=self.Background,
+                                  foreground=self.Foreground, font=self.Font, text=SpaceText)
+        self.Space_lbl.grid(row=1, column=0, columnspan=2,
+                            padx=2, pady=2, sticky="nsew")
+
+        # Shows where to type your username
+        self.Username_lbl = TK.Label(self.Login_fr, bg=self.Background,
+                                     font=self.Font, foreground=self.Foreground, text="Username:")
+        self.Username_lbl.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
+
+        # Gives a place to type in your username
+        self.Username_ent = TK.Entry(
+            self.Login_fr, font=self.Font, foreground=self.Foreground)
+        self.Username_ent.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
+        self.Username_ent.focus()
+
+        # Shows where to type your password
+        self.Password_lbl = TK.Label(self.Login_fr, bg=self.Background,
+                                     font=self.Font, foreground=self.Foreground, text="Password:")
+        self.Password_lbl.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
+
+        # Gives a place to type in your password which hides the text
+        self.Password_ent = TK.Entry(
+            self.Login_fr, font=self.Font, foreground=self.Foreground, show="•")
+        self.Password_ent.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
+
+        # Will provide instructions of what to do if you cannot work it out
+        self.Help_btn = TK.Button(self.Login_fr, bg=self.Background, activebackground=self.Background,
+                                  font=self.Font, foreground=self.Foreground, text="?", command=lambda: self.Help())
+        self.Help_btn.grid(row=2, column=2, sticky="nsew",
+                           padx=1, pady=2, rowspan=2)
+
+        # Will house and grid all of the buttons
+        self.Button_fr = TK.Frame(self.Login_fr, bg=self.Background)
+        self.Button_fr.grid(row=4, column=0, columnspan=3,
+                            sticky="nsew", padx=2, pady=2)
+
+        # When clicked will run the quting processes
+        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                                  font=self.Font, foreground=self.Foreground, text="Quit", command=lambda: self.Quit())
+        self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+
+        # When clicked will run the login processes
+        self.Login_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
+                                   font=self.Font, foreground=self.Foreground, text="Login", command=lambda: self.Login())
+        self.Login_btn.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
+
+        # When clicked will run the newaccount processes
+        self.NewAccount_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
+                                        font=self.Font, foreground=self.Foreground, text="New Account", command=lambda: self.NewAccount())
+        self.NewAccount_btn.grid(
+            row=0, column=2, sticky="nsew", padx=2, pady=2)
+
+        self.Username_ent.bind("<Return>", lambda e: self.Login())
+        self.Password_ent.bind("<Return>", lambda e: self.Login())
+        self.Login_fr.bind("<Return>", lambda e: self.Login())
+
+        self.Align_Grid(self.Button_fr)
+
+        self.Align_Grid(self.Login_fr)
+
+    def Login(self):
+        '''
+        Checks the users login details and if they match ones in the datbase will log the user in
+        '''
+
+        # Hash the username and password for security
+        self.Username = Hash.Hash(str(self.Username_ent.get()))
+        self.Password = Hash.Hash(str(self.Password_ent.get()))
+
+        # Connects to the database
+        with lite.connect("myDatabase.db") as self.Con:
+            # Creats the curser object
+            self.Cur = self.Con.cursor()
+            try:
+                # Reads the password in the database related to the username given
+                self.Cur.execute(
+                    "SELECT Password FROM Users WHERE UserName = ?", ((self.Username,)))
+
+                self.UserPassword = self.Cur.fetchall()[0][0]
+            except Exception:
+                # If the username doesn't match one in the database
+                self.Space_lbl.config(text="Username/Password is incorrect")
+
+                # Clears the users inputs
+                self.Username_ent.delete(0, "end")
+                self.Password_ent.delete(0, "end")
+                return
+
+            # Checks the passwords match
+            if self.Password == self.UserPassword:
+                self.Username_ent.delete(0, "end")
+                self.Password_ent.delete(0, "end")
+
+                # Call the main menu
+                self.MainMenu()
+
+                return
+
+            # If they don't match don't log the user in
+            else:
+                self.Space_lbl.config(text="Username/Password is incorrect")
+                self.Username_ent.focus()
+                self.Username_ent.delete(0, "end")
+                self.Password_ent.delete(0, "end")
+                return
+
+    def CreateAccount(self):
+        # Clears the space lbl
+        self.Space_lbl.config(text="")
+
+        # Sets all of the column varables for the new user
+        self.Username = Hash.Hash(str(self.Username_ent.get()))
+        # These are hashed so i never see there real passwords
+        self.Password = str(Hash.Hash(str(self.Password_ent.get())))
+        self.RepeatPassword = str(
+            Hash.Hash(str(self.RepeatPassword_ent.get())))
+        self.Warnings = 0
+
+        # Checks to see if the database is empty- if it is the user will automatically be set to owner
+        # Connects to the database
+        with lite.connect("myDatabase.db") as self.Con:
+            # Creats a curser object to interact with the database
+            self.Cur = self.Con.cursor()
+
+            try:
+                self.Cur.execute("SELECT * FROM Users")
+
+                # If there are no items in the databse it sets the account type to owner
+                if not self.Cur.fetchall():
+                    self.AccountType = "owner"
+
+                # If accounts already exist the account will be standered
+                else:
+                    self.AccountType = "standered"
+            except Exception as Identifier:
+                print(Identifier)
+                pass
+
+        # Makes sure your passwords match
+        if self.Password == self.RepeatPassword:
+            pass
+        # If they don't it will tell the user and clear their inputs
+        else:
+            self.Space_lbl.config(text="Sorry your passwords didn't match")
+            self.Username_ent.focus()
+            self.Username_ent.delete(0, 'end')
+            self.Password_ent.delete(0, 'end')
+            self.RepeatPassword_ent.delete(0, 'end')
+            return
+
+        # checksthe feild isn't empty
+        if self.Username == "" or self.Password_ent.get() == "" or self.RepeatPassword_ent.get() == "":
+            self.Space_lbl.config(text="Sorry one of your feils was empty")
+            self.Username_ent.delete(0, 'end')
+            self.Password_ent.delete(0, 'end')
+            self.RepeatPassword_ent.delete(0, 'end')
+            self.Username_ent.focus()
+            return
+
+        with lite.connect("myDatabase.db") as self.Con:
+            self.Cur = self.Con.cursor()
+            try:
+                # Tests if the username already exists in the database
+                self.Cur.execute(
+                    "SELECT EXISTS (SELECT * FROM Users WHERE Username = ?)", ((self.Username,)))
+                for i in self.Cur:
+                    for n in i:
+                        if n == 1:  # 0 meand the username isn't there 1 means it already exists
+                            # If the username already exists it will tell the userr and clear their inputs
+                            self.Space_lbl.config(
+                                text="Sorry this username is already taken")
+                            self.Username_ent.focus()
+                            self.Username_ent.delete(0, 'end')
+                            self.Password_ent.delete(0, 'end')
+                            self.RepeatPassword_ent.delete(0, 'end')
+                            return
+                        else:
+                            pass
+            except Exception:
+                return
+
+        # Connects to the database
+
+        # Automatically closes the connection when it is done
+        with lite.connect("myDatabase.db") as self.Con:
+            self.Cur = self.Con.cursor()  # Creates the curser object
+            try:
+                self.Cur.execute("INSERT INTO USERS(Username, Password, AccountType, Warnings) VALUES(?, ?, ?, ?)", (
+                    self.Username, self.Password, self.AccountType, self.Warnings))
+            except Exception:
+                pass
+        self.NewAccount_fr.destroy()
+
+        self.LoginScreen(SpaceText="Account sucessfully created")
+
+    def NewAccount(self):
+        # Creats a new standered user account
+        # Destroys the old login frame
+        self.Login_fr.destroy()
+
+        # Creats a new new account frame to build up from
+        self.NewAccount_fr = TK.Frame(self.Main_fr, bg=self.Background)
+        self.NewAccount_fr.pack(fill=TK.BOTH, expand=True)
+
+        # Adds a title
+        self.Title_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
+                                  foreground=self.Foreground, font=self.TitleFont, text="New Account")
+        self.Title_lbl.grid(row=0, column=0, columnspan=2,
+                            padx=2, pady=2, sticky="nsew")
+
+        self.Space_lbl = TK.Label(
+            self.NewAccount_fr, bg=self.Background, foreground=self.Foreground, font=self.Font)
+        self.Space_lbl.grid(row=1, column=0, columnspan=2,
+                            padx=2, pady=2, sticky="nsew")
+
+        # Shows where to type your new username
+        self.Username_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
+                                     font=self.Font, foreground=self.Foreground, text="Username:")
+        self.Username_lbl.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
+
+        # Gives a place to type in your new username
+        self.Username_ent = TK.Entry(
+            self.NewAccount_fr, font=self.Font, foreground=self.Foreground)
+        self.Username_ent.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
+        self.Username_ent.focus()
+
+        # Shows where to type your new password
+        self.Password_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
+                                     font=self.Font, foreground=self.Foreground, text="Password:")
+        self.Password_lbl.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
+
+        # Gives a place to type in your new password which hides the text
+        self.Password_ent = TK.Entry(
+            self.NewAccount_fr, font=self.Font, foreground=self.Foreground, show="•")
+        self.Password_ent.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
+
+        # Shows where to type your new password
+        self.RepeatPassword_lbl = TK.Label(
+            self.NewAccount_fr, bg=self.Background, font=self.Font, foreground=self.Foreground, text="Password (Again):")
+        self.RepeatPassword_lbl.grid(
+            row=4, column=0, sticky="nsew", padx=2, pady=2)
+
+        # Gives a place to type in your new password which hides the text
+        self.RepeatPassword_ent = TK.Entry(
+            self.NewAccount_fr, font=self.Font, foreground=self.Foreground, show="•")
+        self.RepeatPassword_ent.grid(
+            row=4, column=1, sticky="nsew", padx=2, pady=2)
+
+        # Creats a frame to store the buttons
+        self.Button_fr = TK.Frame(self.NewAccount_fr, bg=self.Background)
+        self.Button_fr.grid(row=5, column=0, columnspan=2,
+                            sticky="nsew", padx=2, pady=2)
+
+        # When clicked will run the quting processes
+        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                                  font=self.Font, foreground=self.Foreground, text="QUIT", command=lambda: self.Quit())
+        self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
+
+        # When clicked will run the create account processes
+        self.CreateAccount_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
+                                           font=self.Font, foreground=self.Foreground, text="Create Account", command=lambda: self.CreateAccount())
+        self.CreateAccount_btn.grid(
+            row=0, column=1, sticky="nsew", padx=2, pady=2)
+
+        # When clicked will take the user back to the login screen
+        self.Back_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
+                                  font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(self.NewAccount_fr, 0))
+        self.Back_btn.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
+
+        self.RepeatPassword_ent.bind(
+            "<Return>", lambda e: self.CreateAccount())
+        self.Password_ent.bind("<Return>", lambda e: self.CreateAccount())
+        self.Username_ent.bind("<Return>", lambda e: self.CreateAccount())
+
+        self.Align_Grid(self.Button_fr)
+
+        self.Align_Grid(self.NewAccount_fr)
+
+
     '''
     Loads the main menu screen for when the user has successfuly loged in
     '''
@@ -1882,52 +2219,7 @@ class Main():
         # Exits the program
         root.destroy()
 
-    def Login(self):
-        '''
-        Checks the users login details and if they match ones in the datbase will log the user in
-        '''
-
-        # Hash the username and password for security
-        self.Username = Hash.Hash(str(self.Username_ent.get()))
-        self.Password = Hash.Hash(str(self.Password_ent.get()))
-
-        # Connects to the database
-        with lite.connect("myDatabase.db") as self.Con:
-            # Creats the curser object
-            self.Cur = self.Con.cursor()
-            try:
-                # Reads the password in the database related to the username given
-                self.Cur.execute(
-                    "SELECT Password FROM Users WHERE UserName = ?", ((self.Username,)))
-
-                self.UserPassword = self.Cur.fetchall()[0][0]
-            except Exception:
-                # If the username doesn't match one in the database
-                self.Space_lbl.config(text="Username/Password is incorrect")
-
-                # Clears the users inputs
-                self.Username_ent.delete(0, "end")
-                self.Password_ent.delete(0, "end")
-                return
-
-            # Checks the passwords match
-            if self.Password == self.UserPassword:
-                self.Username_ent.delete(0, "end")
-                self.Password_ent.delete(0, "end")
-
-                # Call the main menu
-                self.MainMenu()
-
-                return
-
-            # If they don't match don't log the user in
-            else:
-                self.Space_lbl.config(text="Username/Password is incorrect")
-                self.Username_ent.focus()
-                self.Username_ent.delete(0, "end")
-                self.Password_ent.delete(0, "end")
-                return
-
+    
     # The main method behind the back buttons
     def Back(self, CurrentFrame, GoToNum):
         '''
@@ -1962,295 +2254,6 @@ class Main():
 
         return
 
-    def CreateAccount(self):
-        # Clears the space lbl
-        self.Space_lbl.config(text="")
-
-        # Sets all of the column varables for the new user
-        self.Username = Hash.Hash(str(self.Username_ent.get()))
-        # These are hashed so i never see there real passwords
-        self.Password = str(Hash.Hash(str(self.Password_ent.get())))
-        self.RepeatPassword = str(
-            Hash.Hash(str(self.RepeatPassword_ent.get())))
-        self.Warnings = 0
-
-        # Checks to see if the database is empty- if it is the user will automatically be set to owner
-        # Connects to the database
-        with lite.connect("myDatabase.db") as self.Con:
-            # Creats a curser object to interact with the database
-            self.Cur = self.Con.cursor()
-
-            try:
-                self.Cur.execute("SELECT * FROM Users")
-
-                # If there are no items in the databse it sets the account type to owner
-                if not self.Cur.fetchall():
-                    self.AccountType = "owner"
-
-                # If accounts already exist the account will be standered
-                else:
-                    self.AccountType = "standered"
-            except Exception as Identifier:
-                print(Identifier)
-                pass
-
-        # Makes sure your passwords match
-        if self.Password == self.RepeatPassword:
-            pass
-        # If they don't it will tell the user and clear their inputs
-        else:
-            self.Space_lbl.config(text="Sorry your passwords didn't match")
-            self.Username_ent.focus()
-            self.Username_ent.delete(0, 'end')
-            self.Password_ent.delete(0, 'end')
-            self.RepeatPassword_ent.delete(0, 'end')
-            return
-
-        # checksthe feild isn't empty
-        if self.Username == "" or self.Password_ent.get() == "" or self.RepeatPassword_ent.get() == "":
-            self.Space_lbl.config(text="Sorry one of your feils was empty")
-            self.Username_ent.delete(0, 'end')
-            self.Password_ent.delete(0, 'end')
-            self.RepeatPassword_ent.delete(0, 'end')
-            self.Username_ent.focus()
-            return
-
-        with lite.connect("myDatabase.db") as self.Con:
-            self.Cur = self.Con.cursor()
-            try:
-                # Tests if the username already exists in the database
-                self.Cur.execute(
-                    "SELECT EXISTS (SELECT * FROM Users WHERE Username = ?)", ((self.Username,)))
-                for i in self.Cur:
-                    for n in i:
-                        if n == 1:  # 0 meand the username isn't there 1 means it already exists
-                            # If the username already exists it will tell the userr and clear their inputs
-                            self.Space_lbl.config(
-                                text="Sorry this username is already taken")
-                            self.Username_ent.focus()
-                            self.Username_ent.delete(0, 'end')
-                            self.Password_ent.delete(0, 'end')
-                            self.RepeatPassword_ent.delete(0, 'end')
-                            return
-                        else:
-                            pass
-            except Exception:
-                return
-
-        # Connects to the database
-
-        # Automatically closes the connection when it is done
-        with lite.connect("myDatabase.db") as self.Con:
-            self.Cur = self.Con.cursor()  # Creates the curser object
-            try:
-                self.Cur.execute("INSERT INTO USERS(Username, Password, AccountType, Warnings) VALUES(?, ?, ?, ?)", (
-                    self.Username, self.Password, self.AccountType, self.Warnings))
-            except Exception:
-                pass
-        self.NewAccount_fr.destroy()
-
-        self.LoginScreen(SpaceText="Account sucessfully created")
-
-    def NewAccount(self):
-        # Creats a new standered user account
-        # Destroys the old login frame
-        self.Login_fr.destroy()
-
-        # Creats a new new account frame to build up from
-        self.NewAccount_fr = TK.Frame(self.Main_fr, bg=self.Background)
-        self.NewAccount_fr.pack(fill=TK.BOTH, expand=True)
-
-        # Adds a title
-        self.Title_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
-                                  foreground=self.Foreground, font=self.TitleFont, text="New Account")
-        self.Title_lbl.grid(row=0, column=0, columnspan=2,
-                            padx=2, pady=2, sticky="nsew")
-
-        self.Space_lbl = TK.Label(
-            self.NewAccount_fr, bg=self.Background, foreground=self.Foreground, font=self.Font)
-        self.Space_lbl.grid(row=1, column=0, columnspan=2,
-                            padx=2, pady=2, sticky="nsew")
-
-        # Shows where to type your new username
-        self.Username_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Username:")
-        self.Username_lbl.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Gives a place to type in your new username
-        self.Username_ent = TK.Entry(
-            self.NewAccount_fr, font=self.Font, foreground=self.Foreground)
-        self.Username_ent.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
-        self.Username_ent.focus()
-
-        # Shows where to type your new password
-        self.Password_lbl = TK.Label(self.NewAccount_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Password:")
-        self.Password_lbl.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Gives a place to type in your new password which hides the text
-        self.Password_ent = TK.Entry(
-            self.NewAccount_fr, font=self.Font, foreground=self.Foreground, show="•")
-        self.Password_ent.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
-
-        # Shows where to type your new password
-        self.RepeatPassword_lbl = TK.Label(
-            self.NewAccount_fr, bg=self.Background, font=self.Font, foreground=self.Foreground, text="Password (Again):")
-        self.RepeatPassword_lbl.grid(
-            row=4, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Gives a place to type in your new password which hides the text
-        self.RepeatPassword_ent = TK.Entry(
-            self.NewAccount_fr, font=self.Font, foreground=self.Foreground, show="•")
-        self.RepeatPassword_ent.grid(
-            row=4, column=1, sticky="nsew", padx=2, pady=2)
-
-        # Creats a frame to store the buttons
-        self.Button_fr = TK.Frame(self.NewAccount_fr, bg=self.Background)
-        self.Button_fr.grid(row=5, column=0, columnspan=2,
-                            sticky="nsew", padx=2, pady=2)
-
-        # When clicked will run the quting processes
-        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
-                                  font=self.Font, foreground=self.Foreground, text="QUIT", command=lambda: self.Quit())
-        self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
-
-        # When clicked will run the create account processes
-        self.CreateAccount_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
-                                           font=self.Font, foreground=self.Foreground, text="Create Account", command=lambda: self.CreateAccount())
-        self.CreateAccount_btn.grid(
-            row=0, column=1, sticky="nsew", padx=2, pady=2)
-
-        # When clicked will take the user back to the login screen
-        self.Back_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                  font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(self.NewAccount_fr, 0))
-        self.Back_btn.grid(row=0, column=2, sticky="nsew", padx=2, pady=2)
-
-        self.RepeatPassword_ent.bind(
-            "<Return>", lambda e: self.CreateAccount())
-        self.Password_ent.bind("<Return>", lambda e: self.CreateAccount())
-        self.Username_ent.bind("<Return>", lambda e: self.CreateAccount())
-
-        self.Align_Grid(self.Button_fr)
-
-        self.Align_Grid(self.NewAccount_fr)
-
-    def __init__(self, root):
-        # Creats the main window for the login screen to load into
-
-        # Changes the default root icon
-        root.wm_iconbitmap("MainIcon.ico")
-
-        # Used incase the db doesn't exist to add all of the needed columns
-        self.Title = [
-            "UserName",
-            "Password",
-            "AccountType",
-            "Warnings",
-            "Email",
-            "Messages",
-        ]
-
-        # If the database dosn't exist it will create it if it does nothing will happen
-        # Connects to the database
-
-        # Automatically closes the connection when it is done
-        with lite.connect("myDatabase.db") as self.Con:
-            self.Cur = self.Con.cursor()  # Creates the curser object
-            try:
-                # Creates the table
-                self.Cur.execute(
-                    "CREATE TABLE Users(ID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT)")
-                for i in range(len(self.Title)):  # Adds the kwargs to the table
-                    self.Cur.execute("ALTER TABLE Users ADD COLUMN {ColumnName} TEXT".format(
-                        ColumnName=str(self.Title[i]), ))
-                pass
-            except Exception:  # If the databse or table already exist it will exit
-                pass
-
-        # Sets the main frame- this will achally control the screen instead of the root
-        self.Main_fr = TK.Frame(root, bg="#7eccf7")
-        self.Main_fr.pack(fill=TK.BOTH, expand=True)
-
-        # Sets all of the GUI personilation varibes to their defult value
-        self.SetDefults(Update=False)
-
-        # Calls the login screen
-        self.LoginScreen()
-
-    def LoginScreen(self, SpaceText=""):
-        # Sets up the login screen for entering usernames and passwords
-        self.SetDefults(Update=False)  # Resets all of the defult values
-
-        # Creats the login frame
-        self.Login_fr = TK.Frame(self.Main_fr, bg=self.Background)
-        self.Login_fr.pack(fill=TK.BOTH, expand=True)
-
-        # Titles the screen
-        self.Title_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                  font=self.TitleFont, foreground=self.Foreground, text="Please Login...")
-        self.Title_lbl.grid(row=0, column=0, sticky="nsew",
-                            padx=2, pady=2, columnspan=3)
-
-        self.Space_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                  foreground=self.Foreground, font=self.Font, text=SpaceText)
-        self.Space_lbl.grid(row=1, column=0, columnspan=2,
-                            padx=2, pady=2, sticky="nsew")
-
-        # Shows where to type your username
-        self.Username_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Username:")
-        self.Username_lbl.grid(row=2, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Gives a place to type in your username
-        self.Username_ent = TK.Entry(
-            self.Login_fr, font=self.Font, foreground=self.Foreground)
-        self.Username_ent.grid(row=2, column=1, sticky="nsew", padx=2, pady=2)
-        self.Username_ent.focus()
-
-        # Shows where to type your password
-        self.Password_lbl = TK.Label(self.Login_fr, bg=self.Background,
-                                     font=self.Font, foreground=self.Foreground, text="Password:")
-        self.Password_lbl.grid(row=3, column=0, sticky="nsew", padx=2, pady=2)
-
-        # Gives a place to type in your password which hides the text
-        self.Password_ent = TK.Entry(
-            self.Login_fr, font=self.Font, foreground=self.Foreground, show="•")
-        self.Password_ent.grid(row=3, column=1, sticky="nsew", padx=2, pady=2)
-
-        # Will provide instructions of what to do if you cannot work it out
-        self.Help_btn = TK.Button(self.Login_fr, bg=self.Background, activebackground=self.Background,
-                                  font=self.Font, foreground=self.Foreground, text="?", command=lambda: self.Help())
-        self.Help_btn.grid(row=2, column=2, sticky="nsew",
-                           padx=1, pady=2, rowspan=2)
-
-        # Will house and grid all of the buttons
-        self.Button_fr = TK.Frame(self.Login_fr, bg=self.Background)
-        self.Button_fr.grid(row=4, column=0, columnspan=3,
-                            sticky="nsew", padx=2, pady=2)
-
-        # When clicked will run the quting processes
-        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
-                                  font=self.Font, foreground=self.Foreground, text="Quit", command=lambda: self.Quit())
-        self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
-
-        # When clicked will run the login processes
-        self.Login_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
-                                   font=self.Font, foreground=self.Foreground, text="Login", command=lambda: self.Login())
-        self.Login_btn.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
-
-        # When clicked will run the newaccount processes
-        self.NewAccount_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                        font=self.Font, foreground=self.Foreground, text="New Account", command=lambda: self.NewAccount())
-        self.NewAccount_btn.grid(
-            row=0, column=2, sticky="nsew", padx=2, pady=2)
-
-        self.Username_ent.bind("<Return>", lambda e: self.Login())
-        self.Password_ent.bind("<Return>", lambda e: self.Login())
-        self.Login_fr.bind("<Return>", lambda e: self.Login())
-
-        self.Align_Grid(self.Button_fr)
-
-        self.Align_Grid(self.Login_fr)
 
     '''
     These will simplify the GUI code and help to remove most of the rpetition in it
