@@ -1,13 +1,13 @@
-##Title 
+## Title 
 LoginAccess GUI
 
 ## Current Version
 3.2
 
-##AUTHOR(S): 
+## AUTHOR(S): 
 Ambrose Hlustik-Smith
 
-##Dates
+## Dates
 
 DATE STARTED (YYYY/MM/DD): 2018/02/24
 
