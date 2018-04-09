@@ -2313,6 +2313,47 @@ class Main():
 
         return self.Quit_btn
 
+    def AddPositive_btn(self, Row, Column, Frame, Text, Span=1):
+        '''
+        You must add your own command using the .config method
+        '''
+        self.Button = TK.Button(Frame, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
+                                foreground=self.Foreground, font=self.Font, text=Text)
+        self.Button.grid(row=Row, column=Column, padx=2,
+                         pady=2, sticky="nsew", columnspan=Span)
+
+        return self.Button
+
+    def AddEntry(self, Frame, Row, Column, Span=1, Focus=False, Show=""):
+        self.Entry = TK.Entry(
+            Frame, font=self.Font, foreground=self.Foreground)
+
+        if Show:
+            self.Entry.config(show=Show)
+        self.Entry.grid(row=Row, column=Column, sticky="nsew",
+                        padx=2, pady=2, columnspan=Span)
+        if Focus:
+            self.Entry.focus()
+        return self.Entry
+
+    def AddNegetive_btn(self, Frame, Row, Column, Text, Span=1):
+        '''
+        You must add your own command using the .config method
+        '''
+        self.Button = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                                foreground=self.Foreground, font=self.Font, text=Text)
+        self.Button.grid(row=Row, column=Column, padx=2,
+                         pady=2, sticky="nsew", columnspan=Span)
+
+        return self.Button
+
+    def AddBack_btn(self, Frame, CurrentFrame, BackNum, Row, Column, Span=1):
+        self.Back_btn = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
+                                  font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(CurrentFrame, BackNum))
+        self.Back_btn.grid(row=Row, column=Column,
+                           sticky="nsew", padx=2, pady=2, columnspan=Span)
+        return
+
 
 # Will only run if it is the program originally started
 if __name__ == "__main__":
