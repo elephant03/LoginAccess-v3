@@ -23,5 +23,10 @@ Version Num | Date Completed
 ### Description
 A login program which will have user authencation and will be able to run my other programes when placed into the correct folder
 
+## How To Use
+* Once you have downloaded and extracted the file double click "LoginAccess.pyw"
+* Click New Account- The first account created will automatically be given owner access
+* Please note: Everything about this is offline- any bug reports or messages sent can only be reveiw by your local users
+
 ### Requirments 
 Python 3.X (written in 3.6) with standered python libary
