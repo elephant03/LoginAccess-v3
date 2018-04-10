@@ -255,7 +255,7 @@ class Main():
         self.Title_lbl = self.AddTitle_lbl(
             0, 0, self.Login_fr, "Please Login...", CSpan=3)
 
-        self.Space_lbl = self.AddSpace_lbl(1, 0, self.Login_fr, 2)
+        self.Space_lbl = self.AddSpace_lbl(1, 0, self.Login_fr, 3)
 
         # Shows where to type your username
         self.Username_lbl = self.AddLabel(2, 0, self.Login_fr, "Username:")
@@ -271,24 +271,25 @@ class Main():
 
         # Will provide instructions of what to do if you cannot work it out
         self.Help_btn = self.AddButton(2, 2, self.Login_fr, "?", RSpan=2)
-        self.Help_btn.config(command = lambda: self.Help())
+        self.Help_btn.config(command=lambda: self.Help())
 
         # Will house and grid all of the buttons
-        self.Button_fr = self.AddFrame(Row=4, Column=0, Pack=False, Frame=self.Login_fr, CSpan = 3)
+        self.Button_fr = self.AddFrame(
+            Row=4, Column=0, Pack=False, Frame=self.Login_fr, CSpan=3)
 
         # When clicked will run the quting processes
-        self.QUIT_btn=TK.Button(self.Button_fr, bg = self.QuitBtn_Background, activebackground = self.QuitBtn_Active,
-                                  font = self.Font, foreground = self.Foreground, text = "Quit", command = lambda: self.Quit())
+        self.QUIT_btn = TK.Button(self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                                  font=self.Font, foreground=self.Foreground, text="Quit", command=lambda: self.Quit())
         self.QUIT_btn.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
 
         # When clicked will run the login processes
         self.Login_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
-                                   font = self.Font, foreground = self.Foreground, text = "Login", command = lambda: self.Login())
+                                   font=self.Font, foreground=self.Foreground, text="Login", command=lambda: self.Login())
         self.Login_btn.grid(row=0, column=1, sticky="nsew", padx=2, pady=2)
 
         # When clicked will run the newaccount processes
         self.NewAccount_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                        font = self.Font, foreground = self.Foreground, text = "New Account", command = lambda: self.NewAccount())
+                                        font=self.Font, foreground=self.Foreground, text="New Account", command=lambda: self.NewAccount())
         self.NewAccount_btn.grid(
             row=0, column=2, sticky="nsew", padx=2, pady=2)
 
@@ -632,6 +633,14 @@ class Main():
                              padx=2, pady=2, sticky="nsew")
 
         self.Align_Grid(self.MainMenu_fr)
+
+        '''
+        A dumb thing for my friend who is testing my code for me =D
+        Thank  you Simbob!
+        '''
+        if self.Username == Hash.Hash("simba") or self.Username == Hash.Hash("Simba") or self.Username == Hash.Hash("phillipa") or self.Username == Hash.Hash("Phillipa"):
+            self.Space_lbl.config(
+                text="Hello Simba! Thank you for testing it =D")
 
     '''
     Displays access to all of the different personal settings
@@ -2247,7 +2256,7 @@ class Main():
             self.Name.pack(fill=TK.BOTH, expand=True)
         else:
             self.Name.grid(row=Row, column=Column,
-                           padx=2, pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan )
+                           padx=2, pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Name
 
@@ -2255,23 +2264,23 @@ class Main():
         self.Space_lbl = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground)
         self.Space_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                            pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Space_lbl
 
     def AddLabel(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
-        self.Space_lbl = TK.Label(
+        self.Label = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground, text=Text)
-        self.Space_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+        self.Label.grid(row=Row, column=Column, padx=2,
+                        pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Space_lbl
+        return self.Label
 
     def AddTitle_lbl(self, Row, Column, Frame, Title, CSpan=1, RSpan=1):
         self.Title_lbl = TK.Label(
             Frame, bg=self.Background, font=self.TitleFont, foreground=self.Foreground, text=Title)
         self.Title_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                            pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Title_lbl
 
@@ -2282,7 +2291,7 @@ class Main():
         self.Button = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Button
 
@@ -2291,7 +2300,7 @@ class Main():
         self.Quit_btn = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
                                   foreground=self.Foreground, font=self.Font, text="Quit", command=lambda: self.Quit())
         self.Quit_btn.grid(row=Row, column=Column, padx=2,
-                           pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                           pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Quit_btn
 
@@ -2302,7 +2311,7 @@ class Main():
         self.Button = TK.Button(Frame, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Button
 
@@ -2317,7 +2326,8 @@ class Main():
         if Focus:
             self.Entry.focus()
 
-        self.Entry.grid(row = Row, column = Column, padx = 2, pady = 2, sticky = "nsew", columnspan = CSpan, rowspan = RSpan)
+        self.Entry.grid(row=Row, column=Column, padx=2, pady=2,
+                        sticky="nsew", columnspan=CSpan, rowspan=RSpan)
         return self.Entry
 
     def AddNegetive_btn(self, Frame, Row, Column, Text, CSpan=1, RSpan=1):
@@ -2327,7 +2337,7 @@ class Main():
         self.Button = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
                                 foreground=self.Foreground, font=self.Font, text=Text)
         self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan = RSpan)
+                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
         return self.Button
 
@@ -2335,7 +2345,7 @@ class Main():
         self.Back_btn = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
                                   font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(CurrentFrame, BackNum))
         self.Back_btn.grid(row=Row, column=Column,
-                           sticky="nsew", padx=2, pady=2, columnspan=CSpan, rowspan = RSpan)
+                           sticky="nsew", padx=2, pady=2, columnspan=CSpan, rowspan=RSpan)
         return
 
 
