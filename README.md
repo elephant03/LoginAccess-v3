@@ -1,7 +1,7 @@
 # LoginAccess GUI
 
 ## Current Release Version
-3.1
+3.1.1
 
 ## Current Version In Progress
 3.2
@@ -18,6 +18,7 @@ Version Num | Date Completed
 ------------|---------------
 3.0 | 2018/03/22
 3.1 | 2018/04/09
+3.1.1| 2018/04/10
 
 
 ### Description
