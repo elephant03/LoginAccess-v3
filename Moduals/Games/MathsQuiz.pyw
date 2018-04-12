@@ -250,7 +250,7 @@ class Main:
             Frame.rowconfigure(i, weight=3)
 
 
-def Run():
+def Run(Varabel):
     root = TK.Tk()
 
     Main(root)

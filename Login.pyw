@@ -1429,7 +1429,18 @@ class Main():
         self.Align_Grid(self.GamesMenu_fr)
 
     def RunGame(self, Num):
-        self.Games_list[Num].Run()
+        self.Games_list[Num].Run({"Background": self.Background, 
+        "Foreground": self.Foreground, 
+        "Btn_Background": self.Btn_Background, 
+        "Btn_Active": self.Btn_Active, 
+        "PositiveBtn_Background": self.PositiveBtn_Background, 
+        "PositiveBtn_Active": self.PositiveBtn_Active, 
+        "QuitBtn_Background": self.QuitBtn_Background, 
+        "QuitBtn_Active": self.QuitBtn_Active, 
+        "Font": self.Font, 
+        "TitleFont": self.TitleFont, 
+        "SubTitleFont": self.SubTitleFont,
+        })
 
     '''
     The messager system
