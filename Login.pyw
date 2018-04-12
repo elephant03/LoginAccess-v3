@@ -634,14 +634,6 @@ class Main():
 
         self.Align_Grid(self.MainMenu_fr)
 
-        '''
-        A dumb thing for my friend who is testing my code for me =D
-        Thank  you Simbob!
-        '''
-        if self.Username == Hash.Hash("simba") or self.Username == Hash.Hash("Simba") or self.Username == Hash.Hash("phillipa") or self.Username == Hash.Hash("Phillipa"):
-            self.Space_lbl.config(
-                text="Hello Simba! Thank you for testing it =D")
-
     '''
     Displays access to all of the different personal settings
     '''
