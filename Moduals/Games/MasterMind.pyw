@@ -53,6 +53,8 @@ class Main:
         self.Start_btn = self.AddPositive_btn(4, 2, self.StartMenu_fr, "Start")
         self.Start_btn.config(command=lambda: self.StartGame())
 
+        self.Username_ent.bind("<Return>", lambda e: self.StartGame())
+
     def HighScores(self):
         import sqlite3 as lite
 
@@ -102,7 +104,25 @@ class Main:
         return
 
     def StartGame(self):
-        return
+        self.Username = self.Username_ent.get()
+        if not self.Username:
+            self.Space_lbl.config(text="You didn't enter a username")
+            return
+
+        self.StartMenu_fr.destroy()
+        self.Play_fr = self.AddFrame()
+
+        from random import choice
+        self.Colours = ["red", "yellow", "green", "blue", "black", "white"]
+        self.RandomColours = []
+
+        for _i in range(4):
+            self.Colour = choice(self.Colours)
+            self.RandomColours.append(self.Colour)
+
+            self.Colours.remove(self.Colour)
+
+        print(self.RandomColours)
 
     def Quit(self):
         self.root.destroy()
