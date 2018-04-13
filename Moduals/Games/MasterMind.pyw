@@ -116,7 +116,6 @@ class Main:
             return
 
         self.StartMenu_fr.destroy()
-        self.Play_fr = self.AddFrame()
 
         from random import choice
         self.Colours = ["red", "yellow", "green", "blue", "black", "white"]
@@ -134,15 +133,23 @@ class Main:
 
         self.StrVar_list = []
 
+        self.Title_lbl = self.AddTitle_lbl(
+            0, 0, self.Game_fr, "Guess...", CSpan=2)
+
+        self.Space_lbl = self.AddSpace_lbl(1, 0, self.Game_fr, CSpan=2)
+
+        self.Play_fr = self.AddFrame(
+            Row=2, Column=0, Pack=False, Frame=self.Game_fr, CSpan=2)
+
         for _i in range(4):
-            self.Str_var = TK.StringVar(self.Game_fr)
+            self.Str_var = TK.StringVar(self.Play_fr)
             self.Str_var.set(self.Colours[0])
 
             self.StrVar_list.append(self.Str_var)
 
         for i in range(4):
             Colour_dd = TK.OptionMenu(
-                self.Game_fr, self.StrVar_list[i], *self.Colours)
+                self.Play_fr, self.StrVar_list[i], *self.Colours)
 
             Colour_dd.config(bg=self.Background, activebackground=self.Background,
                              font=self.Font, foreground=self.Foreground)
@@ -154,7 +161,33 @@ class Main:
 
             Colour_dd.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
 
+        self.GiveUp_btn = self.AddButton(
+            1, 0, self.Play_fr, "Give Up", CSpan=2)
+
+        self.GiveUp_btn.config(command=lambda: self.GiveUp())
+
+        self.Guess_btn = self.AddPositive_btn(
+            1, 2, self.Play_fr, "Guess", CSpan=3)
+        self.Guess_btn.config(command=lambda: self.Guess())
+
         self.Align_Grid(self.Game_fr)
+        self.Align_Grid(self.Play_fr)
+
+    def GiveUp(self):
+        self.Space_lbl.config(text=", ".join(self.RandomColours))
+
+        self.Play_fr.destroy()
+
+        self.Back_btn = self.AddButton(3, 0, self.Game_fr, "Menu")
+        self.Back_btn.config(
+            command=lambda: [self.Game_fr.destroy(), self.StartMenu()])
+
+        self.Quit_btn = self.AddQuit_btn(3, 1, self.Game_fr)
+
+        return
+
+    def Guess(self):
+        return
 
     def Quit(self):
         self.root.destroy()
