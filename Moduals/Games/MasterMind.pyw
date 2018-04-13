@@ -66,13 +66,14 @@ class Main:
                 self.Cur.execute("CREATE TABLE MasterMind(Username, Score)")
             except:
                 try:
-                    self.Cur.execute("SELECT Username FROM MasterMind")
+                    self.Cur.execute(
+                        "SELECT Username FROM MasterMind ORDER BY Score;")
 
                     self.HighScoresUser_list = []
                     for item in self.Cur.fetchall():
                         self.HighScoresUser_list.append(item[0])
 
-                    self.Cur.execute("SELECT Score FROM MasterMind")
+                    self.Cur.execute("SELECT Score FROM MasterMind ORDER BY Score;")
 
                     self.HighScoresScore_list = []
                     for item in self.Cur.fetchall():
@@ -88,6 +89,7 @@ class Main:
         self.Title_lbl = self.AddTitle_lbl(
             0, 0, self.HighScores_fr, "High Scores", CSpan=2)
         self.Space_lbl = self.AddSpace_lbl(1, 0, self.HighScores_fr, CSpan=2)
+        self.Space_lbl.config(text="A lower score is better!")
 
         for i in range(len(self.HighScoresUser_list)):
             self.Name_lbl = self.AddLabel(
@@ -116,6 +118,24 @@ class Main:
             return
 
         self.StartMenu_fr.destroy()
+
+        self.Guess_tl = TK.Toplevel(bg=self.Background)
+
+        self.GTitle_lbl = self.AddTitle_lbl(0, 0, self.Guess_tl, "Guess")
+
+        self.WhitePinsTitle_lbl = self.AddTitle_lbl(
+            0, 1, self.Guess_tl, "White")
+
+        self.BlackPinsTitle_lbl = self.AddTitle_lbl(
+            0, 2, self.Guess_tl, "Black")
+
+        self.GSpace_lbl = self.AddSpace_lbl(1, 0, self.Guess_tl, CSpan=3)
+
+        self.UserGuess_list = []
+        self.UserWhites_list = []
+        self.UserBlacks_list = []
+
+        self.Align_Grid(self.Guess_tl)
 
         from random import choice
         self.Colours = ["red", "yellow", "green", "blue", "black", "white"]
@@ -180,13 +200,92 @@ class Main:
 
         self.Back_btn = self.AddButton(3, 0, self.Game_fr, "Menu")
         self.Back_btn.config(
-            command=lambda: [self.Game_fr.destroy(), self.StartMenu()])
+            command=lambda: [self.Game_fr.destroy(), self.StartMenu(), self.Guess_tl.destroy()])
 
         self.Quit_btn = self.AddQuit_btn(3, 1, self.Game_fr)
 
         return
 
     def Guess(self):
+
+        self.UserGuess = []
+        for item in self.StrVar_list:
+            self.UserGuess.append(item.get())
+
+        self.Items = []
+
+        self.BlackPins = 0
+        self.WhitePins = 0
+        for i in range(len(self.UserGuess)):
+            if self.UserGuess[i] == self.RandomColours[i]:
+                self.BlackPins += 1
+            elif self.UserGuess[i] in self.Items:
+                continue
+            elif self.UserGuess[i] in self.RandomColours:
+                self.WhitePins += 1
+
+            self.Items.append(self.UserGuess[i])
+
+        self.UserGuess_list.append(self.UserGuess)
+        self.UserBlacks_list.append(self.BlackPins)
+        self.UserWhites_list.append(self.WhitePins)
+
+        self.GuessBoard()
+
+        return
+
+    def GuessBoard(self):
+        for i in range(len(self.UserGuess_list)):
+            self.AddLabel(i+4, 0, self.Guess_tl,
+                          ", ".join(self.UserGuess_list[i]))
+            self.AddLabel(i+4, 1, self.Guess_tl,
+                          self.UserWhites_list[i])
+            self.AddLabel(i+4, 2, self.Guess_tl,
+                          self.UserBlacks_list[i])
+
+        self.Align_Grid(self.Guess_tl)
+        if self.BlackPins == 4:
+            self.Win()
+
+        return
+
+    def Win(self):
+        self.Score = len(self.UserGuess_list)
+        self.Guess_tl.destroy()
+
+        self.Game_fr.destroy()
+
+        self.Win_fr = self.AddFrame()
+
+        self.Title_lbl = self.AddTitle_lbl(
+            0, 0, self.Win_fr, "You Win!", CSpan=2)
+
+        self.Score_lbl = self.AddLabel(
+            1, 0, self.Win_fr, "Score: {}".format(self.Score), CSpan=2)
+
+        self.Space_lbl = self.AddSpace_lbl(2, 0, self.Win_fr, CSpan=2)
+
+        self.Back_btn = self.AddButton(3, 0, self.Win_fr, "Menu")
+        self.Back_btn.config(
+            command=lambda: [self.Win_fr.destroy(), self.StartMenu()])
+
+        self.Quit_btn = self.AddQuit_btn(3, 1, self.Win_fr)
+
+        self.Align_Grid(self.Win_fr)
+
+        import sqlite3 as lite
+        with lite.connect("myDatabase.db") as self.Con:
+            self.Cur = self.Con.cursor()
+            try:
+                self.Cur.execute("CREATE TABLE MasterMind(Username, Score)")
+            except:
+                pass
+            try:
+                self.Cur.execute(
+                    "INSERT INTO MasterMind VALUES(?, ?)", (self.Username, self.Score))
+            except Exception as Idenifier:
+                print(Idenifier)
+
         return
 
     def Quit(self):
