@@ -55,6 +55,8 @@ class Main:
 
         self.Username_ent.bind("<Return>", lambda e: self.StartGame())
 
+        self.Align_Grid(self.StartMenu_fr)
+
     def HighScores(self):
         import sqlite3 as lite
 
@@ -101,9 +103,13 @@ class Main:
         self.Back_btn.config(
             command=lambda: [self.StartMenu(), self.HighScores_fr.destroy()])
 
+        self.Align_Grid(self.HighScores_fr)
+
         return
 
     def StartGame(self):
+        import tkinter as TK
+
         self.Username = self.Username_ent.get()
         if not self.Username:
             self.Space_lbl.config(text="You didn't enter a username")
@@ -122,10 +128,50 @@ class Main:
 
             self.Colours.remove(self.Colour)
 
-        print(self.RandomColours)
+        self.Colours = ["red", "yellow", "green", "blue", "black", "white"]
+
+        self.Game_fr = self.AddFrame()
+
+        self.StrVar_list = []
+
+        for _i in range(4):
+            self.Str_var = TK.StringVar(self.Game_fr)
+            self.Str_var.set(self.Colours[0])
+
+            self.StrVar_list.append(self.Str_var)
+
+        for i in range(4):
+            Colour_dd = TK.OptionMenu(
+                self.Game_fr, self.StrVar_list[i], *self.Colours)
+
+            Colour_dd.config(bg=self.Background, activebackground=self.Background,
+                             font=self.Font, foreground=self.Foreground)
+
+            Colour_dd["menu"].config(
+                bg=self.Background, activebackground=self.Background, font=self.Font, foreground=self.Foreground)
+
+            Colour_dd["highlightthickness"] = 0
+
+            Colour_dd.grid(row=0, column=i, padx=10, pady=10, sticky="nsew")
+
+        self.Align_Grid(self.Game_fr)
 
     def Quit(self):
         self.root.destroy()
+
+    # Allows for the grids to expand with the root window
+    def Align_Grid(self, Frame):
+        # Gets the nuber of rows and columns of the grid
+        self.Grid_Size = Frame.grid_size()
+
+        # Loops through every column
+        for i in range(self.Grid_Size[0]):
+            # Sets the weight to a non zero value so it can expand
+            Frame.columnconfigure(i, weight=1)
+        # Loops through every row
+        for i in range(self.Grid_Size[1]):
+            # Sets the weight to a non zero value so it can expand
+            Frame.rowconfigure(i, weight=1)
 
     '''
     These will simplify the GUI code and help to remove most of the rpetition in it
