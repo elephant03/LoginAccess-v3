@@ -73,7 +73,8 @@ class Main:
                     for item in self.Cur.fetchall():
                         self.HighScoresUser_list.append(item[0])
 
-                    self.Cur.execute("SELECT Score FROM MasterMind ORDER BY Score;")
+                    self.Cur.execute(
+                        "SELECT Score FROM MasterMind ORDER BY Score;")
 
                     self.HighScoresScore_list = []
                     for item in self.Cur.fetchall():
@@ -197,10 +198,11 @@ class Main:
         self.Space_lbl.config(text=", ".join(self.RandomColours))
 
         self.Play_fr.destroy()
+        self.Guess_tl.destroy()
 
         self.Back_btn = self.AddButton(3, 0, self.Game_fr, "Menu")
         self.Back_btn.config(
-            command=lambda: [self.Game_fr.destroy(), self.StartMenu(), self.Guess_tl.destroy()])
+            command=lambda: [self.Game_fr.destroy(), self.StartMenu()])
 
         self.Quit_btn = self.AddQuit_btn(3, 1, self.Game_fr)
 
