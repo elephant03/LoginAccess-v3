@@ -53,7 +53,7 @@ N.B Currently none of the tools or games looks update based off the users LoginA
 ## How To Use
 * Once you have downloaded and extracted the file double click "LoginAccess.pyw"
 * Click New Account- The first account created will automatically be given owner access
-* The rules and use of any program can be found when you access the game or tool can click the help (?) or tutorial button
+* The rules and use of any program can be found when you access the game or tool can click the help button or check the wiki
 * Please note: Everything about this is offline- any bug reports or messages sent can only be reveiw by local users
 
 ### Requirments 
