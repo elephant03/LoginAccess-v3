@@ -6,20 +6,26 @@ import tkinter as TK
 
 class Main:
 
-    BgColour = "#7eccf7"
+    def __init__(self, root, Defults):
 
-    Font = ("Arial", 14)
-    Font_Title = ("Arial", 18)
+        self.Background = Defults["Background"]
+        self.Foreground = Defults["Foreground"]
+        self.Btn_Background = Defults["Btn_Background"]
+        self.Btn_Active = Defults["Btn_Active"]
+        self.QuitBtn_Background = Defults["QuitBtn_Background"]
+        self.QuitBtn_Active = Defults["QuitBtn_Active"]
+        self.PositiveBtn_Background = Defults["PositiveBtn_Background"]
+        self.PositiveBtn_Active = Defults["PositiveBtn_Active"]
+        self.Font = Defults["Font"]
+        self.TitleFont = Defults["TitleFont"]
+        self.SubTitleFont = Defults["SubTitleFont"]
 
-    Counter = 1
-
-    def __init__(self, root):
         self.Counter = 1
         self.root = root
         self.root.title("Math quiz")
-        self.root.config(bg=self.BgColour)
+        self.root.config(bg=self.Background)
 
-        self.Start_fr = TK.Frame(self.root, bg=self.BgColour)
+        self.Start_fr = TK.Frame(self.root, bg=self.Background)
         self.Start_fr.grid(row=0, column=0, sticky="nsew")
 
         self.Score = 0
@@ -31,13 +37,13 @@ class Main:
     def Start_Screen(self):
         self.root.geometry("300x200")
 
-        self.Title = TK.Label(self.Start_fr, bg=self.BgColour,
-                              font=self.Font_Title, text="Math Quiz!")
+        self.Title = TK.Label(self.Start_fr, bg=self.Background,
+                              font=self.TitleFont, text="Math Quiz!")
         self.Title.grid(row=0, column=0, columnspan=3,
                         sticky="nsew", padx=3, pady=10)
 
         self.Quit_btn = TK.Button(
-            self.Start_fr, bg="red", font=self.Font, text="QUIT", command=lambda: self.Quit())
+            self.Start_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active, font=self.Font, text="QUIT", command=lambda: self.Quit())
         self.Quit_btn.grid(row=1, column=0, sticky="nsew", padx=3, pady=3)
 
         self.StrVar = TK.StringVar(self.Start_fr)
@@ -46,13 +52,13 @@ class Main:
         self.Mode_dd = TK.OptionMenu(
             self.Start_fr, self.StrVar, "Normal", "Hard", "Super Hard", "Survival")
         self.Mode_dd.config(
-            bg=self.BgColour, activebackground=self.BgColour, font=self.Font)
-        self.Mode_dd["menu"].config(bg=self.BgColour, font=self.Font)
+            bg=self.Background, activebackground=self.Background, font=self.Font)
+        self.Mode_dd["menu"].config(bg=self.Background, font=self.Font)
         self.Mode_dd["highlightthickness"] = 0
         self.Mode_dd.grid(row=1, column=1, sticky="nsew", padx=3, pady=4)
 
         self.Expailnation_lbl = TK.Label(
-            self.Start_fr, bg=self.BgColour, text="?", font=self.Font)
+            self.Start_fr, bg=self.Background, text="?", font=self.Font)
         self.Expailnation_lbl.grid(
             row=1, column=2, sticky="nsew", padx=1, pady=4)
 
@@ -60,16 +66,16 @@ class Main:
         self.Expailnation_lbl.bind("<Leave>", lambda e: self.Explain(1))
 
         self.Start_btn = TK.Button(
-            self.Start_fr, bg="green", text="Start", font=self.Font_Title, command=lambda: self.Start())
+            self.Start_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active, text="Start", font=self.TitleFont, command=lambda: self.Start())
         self.Start_btn.grid(row=2, column=0, columnspan=3,
                             sticky="nsew", padx=3, pady=3)
 
         self.Align_Grid(self.Start_fr)
 
     def Explain(self, Type):
-        self.Explaination_tl = TK.Toplevel(self.Start_fr, bg=self.BgColour)
+        self.Explaination_tl = TK.Toplevel(self.Start_fr, bg=self.Background)
 
-        self.ExpailnationText_lbl = TK.Label(self.Explaination_tl, bg=self.BgColour, font=self.Font,
+        self.ExpailnationText_lbl = TK.Label(self.Explaination_tl, bg=self.Background, font=self.Font,
                                              text="Normal- 5 easy questions\nHard- 5 hard questions\nSuper Hard- 10 hard questions with division\nSurvival- Keep going until you get a question worng")
         self.ExpailnationText_lbl.grid(
             row=0, column=0, sticky="nsew", padx=3, pady=3)
@@ -94,26 +100,26 @@ class Main:
         self.Question = "{Num1} {Symbol} {Num2}".format(
             Num1=rn.randint(-self.NumRange, self.NumRange), Symbol=rn.choice(self.Operators), Num2=rn.randint(-self.NumRange, self.NumRange))
 
-        self.Quiz_fr = TK.Frame(self.root, bg=self.BgColour)
+        self.Quiz_fr = TK.Frame(self.root, bg=self.Background)
         self.Quiz_fr.grid(row=0, column=0, sticky="nsew")
 
-        self.Score_lbl = TK.Label(self.Quiz_fr, bg=self.BgColour,
-                                  font=self.Font_Title, text="Score:\n{}".format(self.Score))
+        self.Score_lbl = TK.Label(self.Quiz_fr, bg=self.Background,
+                                  font=self.TitleFont, text="Score:\n{}".format(self.Score))
         self.Score_lbl.grid(row=0, column=0, sticky="nsew", padx=2, pady=3)
 
         self.Question_lbl = TK.Label(
-            self.Quiz_fr, bg=self.BgColour, font=self.Font_Title, text=self.Question)
+            self.Quiz_fr, bg=self.Background, font=self.TitleFont, text=self.Question)
         self.Question_lbl.grid(row=0, column=1, sticky="nsew", padx=1, pady=3)
 
         self.Answer_lbl = TK.Label(
-            self.Quiz_fr, bg=self.BgColour, font=self.Font, text="Answer:")
+            self.Quiz_fr, bg=self.Background, font=self.Font, text="Answer:")
         self.Answer_lbl.grid(row=1, column=0, sticky="nsew", padx=2, pady=3)
 
         self.Answer_ent = TK.Entry(self.Quiz_fr, font=self.Font)
         self.Answer_ent.grid(row=1, column=1, sticky="nsew", padx=3, pady=3)
 
-        self.Enter_btn = TK.Button(self.Quiz_fr, bg="green", text="Enter",
-                                   font=self.Font_Title, command=lambda: self.Check("1"))
+        self.Enter_btn = TK.Button(self.Quiz_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active, text="Enter",
+                                   font=self.TitleFont, command=lambda: self.Check("1"))
         self.Enter_btn.grid(row=2, column=0, columnspan=2, padx=3, pady=3)
 
         self.Align_Grid(self.Quiz_fr)
@@ -153,7 +159,7 @@ class Main:
         self.Question_lbl.update_idletasks()
 
         self.NextQuestion_btn = TK.Button(
-            self.Quiz_fr, bg="green", text="Next Question", font=self.Font_Title, command=lambda: self.Check(0))
+            self.Quiz_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active, text="Next Question", font=self.TitleFont, command=lambda: self.Check(0))
         self.NextQuestion_btn.grid(
             row=2, column=0, columnspan=2, padx=3, pady=3)
 
@@ -188,38 +194,38 @@ class Main:
 
         self.root.geometry("300x200")
 
-        self.End_fr = TK.Frame(self.root, bg=self.BgColour)
+        self.End_fr = TK.Frame(self.root, bg=self.Background)
         self.End_fr.grid(row=0, column=0, sticky="nsew", padx=3, pady=3)
 
         self.End_lbl = TK.Label(
-            self.End_fr, font=self.Font, bg=self.BgColour, text="End!")
+            self.End_fr, font=self.Font, bg=self.Background, text="End!")
         self.End_lbl.grid(row=0, column=0, sticky="nsew", padx=3, pady=3)
 
-        self.Overveiw_fr = TK.Frame(self.End_fr, bg=self.BgColour)
+        self.Overveiw_fr = TK.Frame(self.End_fr, bg=self.Background)
         self.Overveiw_fr.grid(row=1, column=0, sticky="nsew", padx=3, pady=3)
 
         self.OverveiwScore_lbl = TK.Label(
-            self.Overveiw_fr, font=self.Font, bg=self.BgColour, text="Your final score is: {}".format(self.Score))
+            self.Overveiw_fr, font=self.Font, bg=self.Background, text="Your final score is: {}".format(self.Score))
         self.OverveiwScore_lbl.grid(
             row=0, column=0, sticky="nsew", padx=3, pady=3)
 
         self.OvereiwQuestions_lbl = TK.Label(
-            self.Overveiw_fr, font=self.Font, bg=self.BgColour, text="Your completed {} questions!".format(self.Counter))
+            self.Overveiw_fr, font=self.Font, bg=self.Background, text="Your completed {} questions!".format(self.Counter))
         self.OvereiwQuestions_lbl.grid(
             row=1, column=0, padx=3, pady=3, sticky="nsew")
 
-        self.Button_fr = TK.Frame(self.End_fr, bg=self.BgColour)
+        self.Button_fr = TK.Frame(self.End_fr, bg=self.Background)
         self.Button_fr.grid(row=2, column=0, sticky="nsew", padx=3, pady=3)
 
         self.EndQuit_btn = TK.Button(
-            self.Button_fr, bg="red", font=self.Font, text="QUIT", command=lambda: self.Quit())
+            self.Button_fr, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active, font=self.Font, text="QUIT", command=lambda: self.Quit())
         self.EndQuit_btn.grid(row=0, column=0, sticky="nsew", padx=3, pady=3)
 
-        self.Mneu_btn = TK.Button(self.Button_fr, bg="lawn green",
+        self.Mneu_btn = TK.Button(self.Button_fr, bg=self.Btn_Background, activebackground=self.Btn_Active,
                                   font=self.Font, text="Menu", command=lambda: self.Menu())
         self.Mneu_btn.grid(row=0, column=1, sticky="nsew", padx=3, pady=3)
 
-        self.Play_btn = TK.Button(self.Button_fr, bg="green", font=self.Font,
+        self.Play_btn = TK.Button(self.Button_fr, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active, font=self.Font,
                                   text="Play Again", command=lambda: self.Again())
         self.Play_btn.grid(row=0, column=2, padx=3, pady=3, sticky="nsew")
 
@@ -253,7 +259,7 @@ class Main:
 def Run(Varabel):
     root = TK.Tk()
 
-    Main(root)
+    Main(root, Varabel)
 
     root.mainloop()
 
@@ -261,6 +267,20 @@ def Run(Varabel):
 if __name__ == "__main__":
     root = TK.Tk()
 
-    Run = Main(root)
+    Defults = {
+        "Background": "#7eccf7",
+        "Foreground": "Black",
+        "Btn_Background": "#2db4ff",
+        "Btn_Active": "#2da9ff",
+        "QuitBtn_Background": "#ef2804",
+        "QuitBtn_Active": "#f52804",
+        "PositiveBtn_Background": "#1ece18",
+        "PositiveBtn_Active": "#159b11",
+        "Font": ("Arial", 14),
+        "TitleFont": ("Arial", 18, "bold"),
+        "SubTitleFont": ("Arial", 14, "bold"),
+    }
+
+    Run = Main(root, Defults)
 
     root.mainloop()
