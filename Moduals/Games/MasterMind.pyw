@@ -12,6 +12,9 @@ class Main:
         self.root = root
         self.root.title("Master Mind")
 
+        self.Icon_file = __file__[:-14] + "MasterMind.ico"
+        self.root.wm_iconbitmap(self.Icon_file)
+
         self.Background = Defults["Background"]
         self.Foreground = Defults["Foreground"]
         self.Btn_Background = Defults["Btn_Background"]
