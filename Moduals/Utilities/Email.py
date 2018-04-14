@@ -1,8 +1,8 @@
 def Email(EmailAdress, NewPassword=None, VerifyNum=None):
     import smtplib
 
-    gmail_user = 'LoginAccess3.0@gmail.com'
-    gmail_password = 'Cake1234'
+    gmail_user = 'loginaccess3.2@gmail.com'
+    gmail_password = ''  # No...
 
     sent_from = gmail_user
     to = [EmailAdress]
