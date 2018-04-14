@@ -1421,18 +1421,18 @@ class Main():
         self.Align_Grid(self.GamesMenu_fr)
 
     def RunGame(self, Num):
-        self.Games_list[Num].Run({"Background": self.Background, 
-        "Foreground": self.Foreground, 
-        "Btn_Background": self.Btn_Background, 
-        "Btn_Active": self.Btn_Active, 
-        "PositiveBtn_Background": self.PositiveBtn_Background, 
-        "PositiveBtn_Active": self.PositiveBtn_Active, 
-        "QuitBtn_Background": self.QuitBtn_Background, 
-        "QuitBtn_Active": self.QuitBtn_Active, 
-        "Font": self.Font, 
-        "TitleFont": self.TitleFont, 
-        "SubTitleFont": self.SubTitleFont,
-        })
+        self.Games_list[Num].Run({"Background": self.Background,
+                                  "Foreground": self.Foreground,
+                                  "Btn_Background": self.Btn_Background,
+                                  "Btn_Active": self.Btn_Active,
+                                  "PositiveBtn_Background": self.PositiveBtn_Background,
+                                  "PositiveBtn_Active": self.PositiveBtn_Active,
+                                  "QuitBtn_Background": self.QuitBtn_Background,
+                                  "QuitBtn_Active": self.QuitBtn_Active,
+                                  "Font": self.Font,
+                                  "TitleFont": self.TitleFont,
+                                  "SubTitleFont": self.SubTitleFont,
+                                  })
 
     '''
     The messager system
@@ -2254,101 +2254,101 @@ class Main():
     def AddFrame(self, Row=None, Column=None, Pack=True, Frame=None, CSpan=1, RSpan=1):
         if not Frame:
             Frame = self.Main_fr
-        self.Name = TK.Frame(Frame, bg=self.Background)
+        Name = TK.Frame(Frame, bg=self.Background)
         if Pack:
-            self.Name.pack(fill=TK.BOTH, expand=True)
+            Name.pack(fill=TK.BOTH, expand=True)
         else:
-            self.Name.grid(row=Row, column=Column,
-                           padx=2, pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+            Name.grid(row=Row, column=Column,
+                      padx=2, pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Name
+        return Name
 
     def AddSpace_lbl(self, Row, Column, Frame, CSpan=1, RSpan=1):
-        self.Space_lbl = TK.Label(
+        Space_lbl = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground)
-        self.Space_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Space_lbl.grid(row=Row, column=Column, padx=2,
+                       pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Space_lbl
+        return Space_lbl
 
     def AddLabel(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
-        self.Label = TK.Label(
+        Label = TK.Label(
             Frame, bg=self.Background, font=self.Font, foreground=self.Foreground, text=Text)
-        self.Label.grid(row=Row, column=Column, padx=2,
-                        pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Label.grid(row=Row, column=Column, padx=2,
+                   pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Label
+        return Label
 
     def AddTitle_lbl(self, Row, Column, Frame, Title, CSpan=1, RSpan=1):
-        self.Title_lbl = TK.Label(
+        Title_lbl = TK.Label(
             Frame, bg=self.Background, font=self.TitleFont, foreground=self.Foreground, text=Title)
-        self.Title_lbl.grid(row=Row, column=Column, padx=2,
-                            pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Title_lbl.grid(row=Row, column=Column, padx=2,
+                       pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Title_lbl
+        return Title_lbl
 
     def AddButton(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
-        self.Button = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                foreground=self.Foreground, font=self.Font, text=Text)
-        self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Button = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
+                           foreground=self.Foreground, font=self.Font, text=Text)
+        Button.grid(row=Row, column=Column, padx=2,
+                    pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Button
+        return Button
 
     def AddQuit_btn(self, Row, Column, Frame, CSpan=1, RSpan=1):
 
-        self.Quit_btn = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
-                                  foreground=self.Foreground, font=self.Font, text="Quit", command=lambda: self.Quit())
-        self.Quit_btn.grid(row=Row, column=Column, padx=2,
-                           pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Quit_btn = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                             foreground=self.Foreground, font=self.Font, text="Quit", command=lambda: self.Quit())
+        Quit_btn.grid(row=Row, column=Column, padx=2,
+                      pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Quit_btn
+        return Quit_btn
 
     def AddPositive_btn(self, Row, Column, Frame, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
-        self.Button = TK.Button(Frame, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
-                                foreground=self.Foreground, font=self.Font, text=Text)
-        self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Button = TK.Button(Frame, bg=self.PositiveBtn_Background, activebackground=self.PositiveBtn_Active,
+                           foreground=self.Foreground, font=self.Font, text=Text)
+        Button.grid(row=Row, column=Column, padx=2,
+                    pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Button
+        return Button
 
     def AddEntry(self, Frame, Row, Column, CSpan=1, Focus=False, Show="", RSpan=1):
-        self.Entry = TK.Entry(
+        Entry = TK.Entry(
             Frame, font=self.Font, foreground=self.Foreground)
 
         if Show:
-            self.Entry.config(show=Show)
-        self.Entry.grid(row=Row, column=Column, sticky="nsew",
-                        padx=2, pady=2, columnspan=CSpan)
+            Entry.config(show=Show)
+        Entry.grid(row=Row, column=Column, sticky="nsew",
+                   padx=2, pady=2, columnspan=CSpan)
         if Focus:
-            self.Entry.focus()
+            Entry.focus()
 
-        self.Entry.grid(row=Row, column=Column, padx=2, pady=2,
-                        sticky="nsew", columnspan=CSpan, rowspan=RSpan)
-        return self.Entry
+        Entry.grid(row=Row, column=Column, padx=2, pady=2,
+                   sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        return Entry
 
     def AddNegetive_btn(self, Frame, Row, Column, Text, CSpan=1, RSpan=1):
         '''
         You must add your own command using the .config method
         '''
-        self.Button = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
-                                foreground=self.Foreground, font=self.Font, text=Text)
-        self.Button.grid(row=Row, column=Column, padx=2,
-                         pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
+        Button = TK.Button(Frame, bg=self.QuitBtn_Background, activebackground=self.QuitBtn_Active,
+                           foreground=self.Foreground, font=self.Font, text=Text)
+        Button.grid(row=Row, column=Column, padx=2,
+                    pady=2, sticky="nsew", columnspan=CSpan, rowspan=RSpan)
 
-        return self.Button
+        return Button
 
     def AddBack_btn(self, Frame, CurrentFrame, BackNum, Row, Column, CSpan=1, RSpan=1):
-        self.Back_btn = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
-                                  font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(CurrentFrame, BackNum))
-        self.Back_btn.grid(row=Row, column=Column,
-                           sticky="nsew", padx=2, pady=2, columnspan=CSpan, rowspan=RSpan)
+        Back_btn = TK.Button(Frame, bg=self.Btn_Background, activebackground=self.Btn_Active,
+                             font=self.Font, foreground=self.Foreground, text="Back", command=lambda: self.Back(CurrentFrame, BackNum))
+        Back_btn.grid(row=Row, column=Column,
+                      sticky="nsew", padx=2, pady=2, columnspan=CSpan, rowspan=RSpan)
         return
 
 
